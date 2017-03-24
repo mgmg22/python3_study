@@ -3,6 +3,8 @@
 from bs4 import BeautifulSoup
 import requests
 
+from dataread import readDetail
+
 url = 'https://www.jisilu.cn/explore/'
 headers = {}
 
@@ -15,3 +17,4 @@ links = soup.select('div.aw-questoin-content > h4 > a:nth-of-type(1)')
 # print(links)
 for index, item in enumerate(links):
     print(index, item.get_text(), item.get('href'))
+    readDetail(item.get('href'))#打印帖子内容
