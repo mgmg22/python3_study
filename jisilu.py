@@ -15,6 +15,9 @@ data.encoding = 'utf-8'
 soup = BeautifulSoup(data.text, 'lxml')
 links = soup.select('div.aw-questoin-content > h4 > a:nth-of-type(1)')
 # print(links)
+# f = open('./text.txt', 'w')
 for index, item in enumerate(links):
     print(index, item.get_text(), item.get('href'))
+    # f.write(item.get_text()+item.get('href')+'\n')
     readDetail(item.get('href'))#打印帖子内容
+# f.close()
