@@ -28,7 +28,7 @@ def read_main():
                     info = soup_item.select('div.aw-mod-body > div.aw-question-detail-txt ')
                     dates = soup_item.select('div.aw-question-detail-meta > span')
                     print(dates[0].get_text(), '||', info[0].get_text().strip().replace('\n', ' '))
-                    f.write(dates[0].get_text() + '||' + info[0].get_text().strip().replace('\n', ' ') + '\n')
+                    f.write(dates[0].get_text() + '||' + info[0].get_text().strip() + '\n')
                 except:
                     pass
 
