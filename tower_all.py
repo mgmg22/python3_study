@@ -1,4 +1,3 @@
-# coding:utf-8
 # tower日报、项目规划检查
 # shenxs@fshows.com
 from bs4 import BeautifulSoup
@@ -11,12 +10,12 @@ ding_url = "https://oapi.dingtalk.com/robot/send?access_token=1fc402abdd2b7dec04
 plan_home_url = [''] * 6
 flag = [0] * 6
 user = [
-    '沈晓顺',
-    '徐善栋',
-    '李杰',
-    '方俊',
-    '曹世鑫',
-    '但彬',
+    ' 沈晓顺 ',
+    ' @18296120635 ',
+    ' @17607185665 ',
+    ' @17605819508 ',
+    ' @15036142572 ',
+    ' @15820798016 ',
 ]
 
 user_mobile = [
@@ -125,6 +124,9 @@ def get_check_result():
 def send_ding():
     if today_result == '':
         return
+    # 钉钉@数量超过5个时第6个会失效，移除沈晓顺的@
+    if ding_mobile[0] == user_mobile[0]:
+        del ding_mobile[0]
     data = {
         "msgtype": "text",
         "text": {
