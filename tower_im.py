@@ -5,10 +5,11 @@ import requests
 import time
 import json
 
+# 项目规划首页
 projectUrl = 'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/'
+# 钉钉机器人地址
 ding_url = "https://oapi.dingtalk.com/robot/send?access_token=1fc402abdd2b7dec04921423b45415687f19dd817d4fdae699ca703e855745d1"
-plan_home_url = [''] * 6
-flag = [0] * 6
+
 user = [
     ' 沈晓顺 ',
     ' @18296120635 ',
@@ -17,7 +18,7 @@ user = [
     ' @15036142572 ',
     ' @15820798016 ',
 ]
-
+# 钉钉关联的手机号码
 user_mobile = [
     '15757179463',
     '18296120635',
@@ -26,9 +27,7 @@ user_mobile = [
     '15036142572',
     '15820798016',
 ]
-
-ding_mobile = [''] * 6
-
+# 日报地址，目前是写死的
 daily_url = [
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/a5fdf6339f7c46a78ef1f3c0b6d05932/',
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/aa6e1c650d6245ab998d2a152e8e764c/',
@@ -38,14 +37,21 @@ daily_url = [
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/5b5ddb85b3854d22b48eb9711aae016d/',
 ]
 
+# 每个成员项目计划首页的位置下标
 urlPos = [
-    7,
-    9,
-    8,
-    11,
-    10,
     6,
+    8,
+    7,
+    10,
+    9,
+    5,
 ]
+# 发送钉钉通知时@的成员
+ding_mobile = [''] * len(user)
+# 每个成员的项目计划首页
+plan_home_url = [''] * len(user)
+# 项目规划检查结果，0为未写1为写了
+check_flag = [0] * len(user)
 
 ding_header = {
     "Content-Type": "application/json",
@@ -77,27 +83,29 @@ def get_plan_url():
         i = i + 1
 
 
-# 遍历每个人下的项目计划
+# 遍历每个人的项目计划url
 def get_plan_item():
     for pos in range(0, len(plan_home_url)):
         data = requests.get(plan_home_url[pos], headers=headers)
         soup = BeautifulSoup(data.text, 'lxml')
         plan_links = soup.select('div.todo-wrap > span.todo-content > span.content-linkable > a')
+        # 遍历每个项目url
         for index, item in enumerate(plan_links):
+            print(pos, "#", item)
             check_data = requests.get(item.get('href'), headers=headers)
             check_soup = BeautifulSoup(check_data.text, 'lxml')
             check_links = check_soup.select('div.event-head > a')
-            # 遍历检查项操作
+            # 遍历项目中每个检查项的操作时间
             for ind in range(len(check_links)):
                 if today in check_links[ind].get_text():
-                    flag[pos] = 1
+                    check_flag[pos] = 1
                     break
 
 
 # 检查日报
 def check_daily():
     global today_result
-    print(today + "日报提醒")
+    # 遍历每个日报的url
     for pos in range(0, len(daily_url)):
         data = requests.get(daily_url[pos], headers=headers)
         soup = BeautifulSoup(data.text, 'lxml')
@@ -114,15 +122,17 @@ def check_daily():
 # 输出检查结果
 def get_check_result():
     global today_result
-    for index in range(len(flag)):
-        if flag[index] == 0:
+    for index in range(len(check_flag)):
+        if check_flag[index] == 0:
             ding_mobile[index] = user_mobile[index]
             today_result += user[index] + '今日项目规划还未写' + "\n"
+            print(user[index] + '今日项目规划还未写' + "\n")
 
 
 # 同步钉钉机器人
 def send_ding():
     if today_result == '':
+        print(today + "日报都写了")
         return
     # 钉钉@数量超过5个时第6个会失效，移除沈晓顺的@
     if ding_mobile[0] == user_mobile[0]:
@@ -136,9 +146,9 @@ def send_ding():
             "atMobiles": ding_mobile
         }
     }
-    send_data = json.dumps(data)
+    ding_data = json.dumps(data)
     print(ding_mobile)
-    req = requests.post(ding_url, data=send_data, headers=ding_header)
+    req = requests.post(ding_url, data=ding_data, headers=ding_header)
 
 
 if __name__ == '__main__':
