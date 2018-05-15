@@ -39,12 +39,12 @@ daily_url = [
 
 # 每个成员项目计划首页的位置下标
 urlPos = [
-    6,
-    8,
     7,
-    10,
     9,
-    5,
+    8,
+    11,
+    10,
+    6,
 ]
 # 发送钉钉通知时@的成员
 ding_mobile = [''] * len(user)
@@ -83,16 +83,21 @@ def get_plan_url():
         i = i + 1
 
 
+# url域名转化
+def format_url(str):
+    return str.replace('https://hk.tower.im', 'https://tower.im')
+
+
 # 遍历每个人的项目计划url
 def get_plan_item():
     for pos in range(0, len(plan_home_url)):
-        data = requests.get(plan_home_url[pos], headers=headers)
+        data = requests.get(format_url(plan_home_url[pos]), headers=headers)
         soup = BeautifulSoup(data.text, 'lxml')
         plan_links = soup.select('div.todo-wrap > span.todo-content > span.content-linkable > a')
         # 遍历每个项目url
         for index, item in enumerate(plan_links):
             print(pos, "#", item)
-            check_data = requests.get(item.get('href'), headers=headers)
+            check_data = requests.get(format_url(item.get('href')), headers=headers)
             check_soup = BeautifulSoup(check_data.text, 'lxml')
             check_links = check_soup.select('div.event-head > a')
             # 遍历项目中每个检查项的操作时间
@@ -134,8 +139,8 @@ def send_ding():
     if today_result == '':
         print(today + "日报都写了")
         return
-    # 钉钉@数量超过5个时第6个会失效，移除沈晓顺的@
-    if ding_mobile[0] == user_mobile[0]:
+    # 钉钉@数量超过5个时第6个会失效，第一个@
+    if ding_mobile[0] == user_mobile[0] or ding_mobile[0] == '':
         del ding_mobile[0]
     data = {
         "msgtype": "text",
@@ -148,7 +153,7 @@ def send_ding():
     }
     ding_data = json.dumps(data)
     print(ding_mobile)
-    req = requests.post(ding_url, data=ding_data, headers=ding_header)
+    # req = requests.post(ding_url, data=ding_data, headers=ding_header)
 
 
 if __name__ == '__main__':
