@@ -105,6 +105,9 @@ def get_plan_item():
                 if today in check_links[ind].get_text():
                     check_flag[pos] = 1
                     break
+            # 如果已经操作过了则跳出检查项遍历
+            if check_flag[pos] == 1:
+                break
 
 
 # 检查日报
@@ -153,7 +156,7 @@ def send_ding():
     }
     ding_data = json.dumps(data)
     print(ding_mobile)
-    # req = requests.post(ding_url, data=ding_data, headers=ding_header)
+    req = requests.post(ding_url, data=ding_data, headers=ding_header)
 
 
 if __name__ == '__main__':
