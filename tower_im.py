@@ -52,6 +52,8 @@ ding_mobile = [''] * len(user)
 plan_home_url = [''] * len(user)
 # 项目规划检查结果，0为未写1为写了
 check_flag = [0] * len(user)
+# 任务即将延期
+check_quicklink = [0] * len(user)
 
 ding_header = {
     "Content-Type": "application/json",
@@ -99,14 +101,22 @@ def get_plan_item():
             print(pos, "#", item)
             check_data = requests.get(format_url(item.get('href')), headers=headers)
             check_soup = BeautifulSoup(check_data.text, 'lxml')
+            check_item_quicklinks = check_soup.select('div.check-item > a.label.check-item-quicklink > span')
             check_links = check_soup.select('div.event-head > a')
             # 遍历项目中每个检查项的操作时间
             for ind in range(len(check_links)):
                 if today in check_links[ind].get_text():
                     check_flag[pos] = 1
                     break
-            # 如果已经操作过了则跳出检查项遍历
-            if check_flag[pos] == 1:
+            # 判断是否当日任务未标记完成
+            for quicklink_pos in range(len(check_item_quicklinks)):
+                if today in check_item_quicklinks[quicklink_pos].get_text():
+                    check_quicklink[pos] = check_soup.select('div.check-item > a.check-item-name > span')[
+                        quicklink_pos].get_text()
+                    check_flag[pos] = 2
+                    break
+            # 如果当日任务未标记完成则跳出检查项遍历
+            if check_flag[pos] == 2:
                 break
 
 
@@ -118,6 +128,7 @@ def check_daily():
         data = requests.get(daily_url[pos], headers=headers)
         soup = BeautifulSoup(data.text, 'lxml')
         links = soup.select('div.comment-main > div.info > a:nth-of-type(2)')
+        # 局部变量1未写0已写
         daily = 1
         for index, item in enumerate(links):
             if today in item.get('title'):
@@ -135,6 +146,9 @@ def get_check_result():
             ding_mobile[index] = user_mobile[index]
             today_result += user[index] + '今日项目规划还未写' + "\n"
             print(user[index] + '今日项目规划还未写' + "\n")
+        if check_flag[index] == 2:
+            ding_mobile[index] = user_mobile[index]
+            today_result += user[index] + check_quicklink[index] + '检查项任务即将延期' + "\n"
 
 
 # 同步钉钉机器人
