@@ -39,12 +39,12 @@ daily_url = [
 
 # 每个成员项目计划首页的位置下标
 urlPos = [
-    7,
-    9,
     8,
-    11,
     10,
-    6,
+    9,
+    10,
+    11,
+    7,
 ]
 # 发送钉钉通知时@的成员
 ding_mobile = [''] * len(user)
@@ -101,7 +101,7 @@ def get_plan_item():
             print(pos, "#", item)
             check_data = requests.get(format_url(item.get('href')), headers=headers)
             check_soup = BeautifulSoup(check_data.text, 'lxml')
-            check_item_quicklinks = check_soup.select('div.check-item > a.label.check-item-quicklink > span')
+            check_item_quicklinks = check_soup.select('div.check-item > a.label.check-item-quicklink > span.due')
             check_links = check_soup.select('div.event-head > a')
             # 遍历项目中每个检查项的操作时间
             for ind in range(len(check_links)):
@@ -111,8 +111,10 @@ def get_plan_item():
             # 判断是否当日任务未标记完成
             for quicklink_pos in range(len(check_item_quicklinks)):
                 if today in check_item_quicklinks[quicklink_pos].get_text():
-                    check_quicklink[pos] = check_soup.select('div.check-item > a.check-item-name > span')[
-                        quicklink_pos].get_text()
+                    # 获取即将延期的检查项名称
+                    check_quicklink[pos] = \
+                        check_soup.select('div.check-item > a.check-item-name > span.check_item-rest')[
+                            quicklink_pos].get_text()
                     check_flag[pos] = 2
                     break
             # 如果当日任务未标记完成则跳出检查项遍历
