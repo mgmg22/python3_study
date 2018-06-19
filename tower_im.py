@@ -12,10 +12,15 @@ ding_url = "https://oapi.dingtalk.com/robot/send?access_token=1fc402abdd2b7dec04
 
 user = [
     ' 沈晓顺 ',
+    # xsd
     ' @18296120635 ',
+    # lj
     ' @17607185665 ',
+    # fj
     ' @17605819508 ',
+    # csx
     ' @15036142572 ',
+    # db
     ' @15820798016 ',
 ]
 # 钉钉关联的手机号码
@@ -53,7 +58,7 @@ plan_home_url = [''] * len(user)
 # 项目规划检查结果，0为未写1为写了
 check_flag = [0] * len(user)
 # 任务即将延期
-check_quicklink = [0] * len(user)
+check_quicklink = [''] * len(user)
 
 ding_header = {
     "Content-Type": "application/json",
@@ -71,7 +76,10 @@ headers = {
     'Accept-Language': 'zh-CN,zh;q=0.9',
     'Cookie': 'intercom-lou-vgeb94xf=1; intercom-id-vgeb94xf=546b02a0-1fc5-4f33-ba45-7393cb139cc6; _ga=GA1.2.2059481265.1510972641; intercom-lou-xbtsuf77=1; _gid=GA1.2.109886700.1525678234; _tower2_session=512d4e4dabfcd4e5c00fd8d430e974a3; _gat=1; _gat_teamTracker=1; intercom-session-xbtsuf77=eXRZeHpadkdMNkF0ekY5UnMvLytONU9wTHZjOUJhaGlkK1dqUXFmYXdRVXQ3M3AzTFVVSXVsd21SZkdoZ1lVRC0tTU1EZFplRVh1ZXhlOW43TDdLZnQrZz09--328d5d9f8a9a12659000a7efd238d4164448d7b8; remember_token=26bcc67f-d848-457a-a9da-11025384b70c'
 }
-today_result = ""
+# 当日时间
+today = time.strftime("%Y-%m-%d", time.localtime())
+
+report = ""
 
 
 # 获取每个人的项目计划url
@@ -101,61 +109,57 @@ def get_plan_item():
             print(pos, "#", item)
             check_data = requests.get(format_url(item.get('href')), headers=headers)
             check_soup = BeautifulSoup(check_data.text, 'lxml')
-            check_item_quicklinks = check_soup.select('div.check-item > a.label.check-item-quicklink > span.due')
+            check_item_quicklinks = check_soup.select('div.check-item > a.label.check-item-quicklink')
             check_links = check_soup.select('div.event-head > a')
+            print(check_item_quicklinks)
             # 遍历项目中每个检查项的操作时间
-            for ind in range(len(check_links)):
-                if today in check_links[ind].get_text():
+            for check_link in check_links:
+                if today in check_link.get_text():
                     check_flag[pos] = 1
                     break
             # 判断是否当日任务未标记完成
             for quicklink_pos in range(len(check_item_quicklinks)):
-                if today in check_item_quicklinks[quicklink_pos].get_text():
+                if check_item_quicklinks[quicklink_pos].select('span.due') == []:
+                    continue
+                if today in check_item_quicklinks[quicklink_pos].select('span.due')[0].get_text():
                     # 获取即将延期的检查项名称
-                    check_quicklink[pos] = \
-                        check_soup.select('div.check-item > a.check-item-name > span.check_item-rest')[
-                            quicklink_pos].get_text()
-                    check_flag[pos] = 2
+                    check_quicklink[pos] += "\n" + check_soup.select(
+                        'div.check-item > a.check-item-name > span.check_item-rest')[quicklink_pos].get_text()
+                    check_flag[pos] += 2
                     break
-            # 如果当日任务未标记完成则跳出检查项遍历
-            if check_flag[pos] == 2:
-                break
 
 
 # 检查日报
 def check_daily():
-    global today_result
+    global report
     # 遍历每个日报的url
-    for pos in range(0, len(daily_url)):
+    for pos in range(len(daily_url)):
         data = requests.get(daily_url[pos], headers=headers)
         soup = BeautifulSoup(data.text, 'lxml')
-        links = soup.select('div.comment-main > div.info > a:nth-of-type(2)')
-        # 局部变量1未写0已写
-        daily = 1
-        for index, item in enumerate(links):
-            if today in item.get('title'):
-                daily = 0
-        if daily == 1:
+        links = soup.select('div.comment-main > div.info > a.create-time')
+        if today in str(links[-1]):
+            pass
+        else:
             ding_mobile[pos] = user_mobile[pos]
-            today_result += user[pos] + "日报还没写" + "\n"
+            report += user[pos] + "日报还没写" + "\n"
 
 
 # 输出检查结果
 def get_check_result():
-    global today_result
+    global report
     for index in range(len(check_flag)):
         if check_flag[index] == 0:
             ding_mobile[index] = user_mobile[index]
-            today_result += user[index] + '今日项目规划还未写' + "\n"
+            report += user[index] + '今日项目规划还未写' + "\n"
             print(user[index] + '今日项目规划还未写' + "\n")
-        if check_flag[index] == 2:
+        if check_flag[index] >= 2:
             ding_mobile[index] = user_mobile[index]
-            today_result += user[index] + check_quicklink[index] + '检查项任务即将延期' + "\n"
+            report += user[index] + check_quicklink[index] + '检查项任务即将延期' + "\n"
 
 
 # 同步钉钉机器人
 def send_ding():
-    if today_result == '':
+    if report == '':
         print(today + "日报都写了")
         return
     # 钉钉@数量超过5个时第6个会失效，第一个@
@@ -164,7 +168,7 @@ def send_ding():
     data = {
         "msgtype": "text",
         "text": {
-            "content": today + "日报提醒" + "\n" + today_result
+            "content": today + "日报提醒" + "\n" + report
         },
         "at": {
             "atMobiles": ding_mobile
@@ -172,12 +176,11 @@ def send_ding():
     }
     ding_data = json.dumps(data)
     print(ding_mobile)
+    print(data)
     req = requests.post(ding_url, data=ding_data, headers=ding_header)
 
 
 if __name__ == '__main__':
-    # 当日时间
-    today = time.strftime("%Y-%m-%d", time.localtime())
     check_daily()
     get_plan_url()
     get_plan_item()

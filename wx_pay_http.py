@@ -20,7 +20,7 @@ def get_response():
     response = requests.post(url, data=parse_to_xml(request_data))
     # print(bytes.decode(response.content))
     print(trans_xml_to_dict(parse_to_xml(request_data)))
-    with open('out.txt', "wb") as out:
+    with open('WX.txt', "wb") as out:
         out.write(response.content)
 
 
