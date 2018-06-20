@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Author: sxs
+# @Date  : 2018/6/20
+# @Desc  :
 import requests
 from bs4 import BeautifulSoup
 import time

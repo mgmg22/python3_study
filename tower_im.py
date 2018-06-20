@@ -1,5 +1,8 @@
-# tower日报、项目规划检查
-# shenxs@fshows.com
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Author: sxs
+# @Date  : 2018/6/20
+# @Desc  : tower日报、项目规划检查
 from bs4 import BeautifulSoup
 import requests
 import time
@@ -111,7 +114,6 @@ def get_plan_item():
             check_soup = BeautifulSoup(check_data.text, 'lxml')
             check_item_quicklinks = check_soup.select('div.check-item > a.label.check-item-quicklink')
             check_links = check_soup.select('div.event-head > a')
-            print(check_item_quicklinks)
             # 遍历项目中每个检查项的操作时间
             for check_link in check_links:
                 if today in check_link.get_text():
@@ -119,14 +121,13 @@ def get_plan_item():
                     break
             # 判断是否当日任务未标记完成
             for quicklink_pos in range(len(check_item_quicklinks)):
-                if check_item_quicklinks[quicklink_pos].select('span.due') == []:
-                    continue
-                if today in check_item_quicklinks[quicklink_pos].select('span.due')[0].get_text():
-                    # 获取即将延期的检查项名称
-                    check_quicklink[pos] += "\n" + check_soup.select(
-                        'div.check-item > a.check-item-name > span.check_item-rest')[quicklink_pos].get_text()
-                    check_flag[pos] += 2
-                    break
+                if check_item_quicklinks[quicklink_pos].select('span.due'):
+                    if today in check_item_quicklinks[quicklink_pos].select('span.due')[0].get_text():
+                        # 获取即将延期的检查项名称
+                        check_quicklink[pos] += "\n" + check_soup.select(
+                            'div.check-item > a.check-item-name > span.check_item-rest')[quicklink_pos].get_text()
+                        check_flag[pos] += 2
+                        break
 
 
 # 检查日报
@@ -137,11 +138,12 @@ def check_daily():
         data = requests.get(daily_url[pos], headers=headers)
         soup = BeautifulSoup(data.text, 'lxml')
         links = soup.select('div.comment-main > div.info > a.create-time')
-        if today in str(links[-1]):
-            pass
-        else:
-            ding_mobile[pos] = user_mobile[pos]
-            report += user[pos] + "日报还没写" + "\n"
+        if links:
+            if today in str(links[-1]):
+                pass
+            else:
+                ding_mobile[pos] = user_mobile[pos]
+                report += user[pos] + "日报还没写" + "\n"
 
 
 # 输出检查结果
