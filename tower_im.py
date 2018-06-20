@@ -12,7 +12,8 @@ import json
 projectUrl = 'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/'
 # 钉钉机器人地址
 ding_url = "https://oapi.dingtalk.com/robot/send?access_token=1fc402abdd2b7dec04921423b45415687f19dd817d4fdae699ca703e855745d1"
-
+# 标识服务器环境为1
+is_server = 0
 user = [
     ' 沈晓顺 ',
     # xsd
@@ -87,7 +88,7 @@ report = ""
 
 # 获取每个人的项目计划url
 def get_plan_url():
-    data = requests.get(projectUrl, headers=headers)
+    data = requests.get(format_url(projectUrl), headers=headers)
     soup = BeautifulSoup(data.text, 'lxml')
     home_links = soup.select('div.title > h4 > span.name > a')
     i = 0
@@ -98,7 +99,10 @@ def get_plan_url():
 
 # url域名转化
 def format_url(str):
-    return str.replace('https://hk.tower.im', 'https://tower.im')
+    if is_server:
+        return str.replace('https://tower.im', 'https://hk.tower.im')
+    else:
+        return str.replace('https://hk.tower.im', 'https://tower.im')
 
 
 # 遍历每个人的项目计划url
@@ -135,7 +139,7 @@ def check_daily():
     global report
     # 遍历每个日报的url
     for pos in range(len(daily_url)):
-        data = requests.get(daily_url[pos], headers=headers)
+        data = requests.get(format_url(daily_url[pos]), headers=headers)
         soup = BeautifulSoup(data.text, 'lxml')
         links = soup.select('div.comment-main > div.info > a.create-time')
         if links:
@@ -183,6 +187,8 @@ def send_ding():
 
 
 if __name__ == '__main__':
+    if is_server:
+        headers['Host'] = 'hk.tower.im'
     check_daily()
     get_plan_url()
     get_plan_item()
