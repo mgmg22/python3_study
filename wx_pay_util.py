@@ -1,50 +1,50 @@
 import hashlib
 
-from bs4 import BeautifulSoup
+import requests
+
+from xml_util import dict_to_xml, xml_to_dict
 
 
-class WechatDroid:
-    def __init__(self, data, secret):
-        self.data = data
+class WechatDroid(object):
+    base_url = 'https://api.mch.weixin.qq.com/'
+
+    def __init__(self, url, data, secret):
+        self.session = requests.session()
+        self.url = self.base_url + url
         self.secret = secret
-        self.get_sign()
+        self.data = self.get_sign(data)
 
-    # 列表转xml
-    def parse_to_xml(self):
-        xml = '<xml>'
-        for key in self.data.keys():
-            xml += "<{0}><![CDATA[{1}]]></{0}>\n".format(key, self.data.get(key))
-        xml += '</xml>'
-        return xml
-
-    # 获取sign
-    def get_sign(self):
+    def get_sign(self, data):
+        """
+        获取sign
+        :return:
+        """
         check = []
-        for key in self.data.keys():
-            if self.data.get(key) is None:
+        for key in data.keys():
+            if data.get(key) is None:
                 check.append(key)
         for key in check:
-            self.data.pop(key)
-        sign = "&".join(sorted("{0}={1}".format(key, self.data.get(key)) for key in self.data.keys()))
-        sign += "&key=" + self.secret
-        self.data['sign'] = md5(sign)
-
-    def trans_xml_to_dict(self):
-        """
-        将微信支付交互返回的 XML 格式数据转化为 Python Dict 对象
-
-        :param xml: 原始 XML 格式数据
-        :return: dict 对象
-        """
-        soup = BeautifulSoup(self.parse_to_xml(), features='xml')
-        xml = soup.find('xml')
-        if not xml:
-            return {}
-        # 将 XML 数据转化为 Dict
-        data = dict([(item.name, item.text) for item in xml.find_all()])
+            data.pop(key)
+        sign = "&".join(sorted("{}={}".format(key, data.get(key)) for key in data.keys()))
+        sign += "&key={}".format(self.secret)
+        data['sign'] = md5(sign)
         return data
 
+    def post(self):
+        response = self.session.post(self.url, data=dict_to_xml(self.data))
+        return response
 
-# 获取md5
+    def save(self):
+        response = self.post()
+        print(xml_to_dict(bytes.decode(response.content)))
+        with open('WX.csv', "w") as out:
+            out.write(bytes.decode(response.content))
+
+
 def md5(before_str):
-    return str(hashlib.md5(before_str.encode()).hexdigest()).upper()
+    """
+    获取md5
+    :param before_str:
+    :return:
+    """
+    return hashlib.md5(before_str.encode('utf-8')).hexdigest().upper()
