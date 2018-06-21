@@ -62,7 +62,7 @@ plan_home_url = [''] * len(user)
 # 项目规划检查结果，0为未写1为写了
 check_flag = [0] * len(user)
 # 任务即将延期
-check_quicklink = [''] * len(user)
+check_today = [''] * len(user)
 
 ding_header = {
     "Content-Type": "application/json",
@@ -78,11 +78,16 @@ headers = {
     'Referer': 'https://tower.im/users/sign_in',
     'Accept-Encoding': 'gzip, deflate, br',
     'Accept-Language': 'zh-CN,zh;q=0.9',
-    'Cookie': 'intercom-lou-vgeb94xf=1; intercom-id-vgeb94xf=546b02a0-1fc5-4f33-ba45-7393cb139cc6; _ga=GA1.2.2059481265.1510972641; intercom-lou-xbtsuf77=1; _gid=GA1.2.109886700.1525678234; _tower2_session=512d4e4dabfcd4e5c00fd8d430e974a3; _gat=1; _gat_teamTracker=1; intercom-session-xbtsuf77=eXRZeHpadkdMNkF0ekY5UnMvLytONU9wTHZjOUJhaGlkK1dqUXFmYXdRVXQ3M3AzTFVVSXVsd21SZkdoZ1lVRC0tTU1EZFplRVh1ZXhlOW43TDdLZnQrZz09--328d5d9f8a9a12659000a7efd238d4164448d7b8; remember_token=26bcc67f-d848-457a-a9da-11025384b70c'
+    'Cookie': 'intercom-lou-vgeb94xf=1; intercom-id-vgeb94xf=546b02a0-1fc5-4f33-ba45-7393cb139cc6;'
+              ' _ga=GA1.2.2059481265.1510972641; intercom-lou-xbtsuf77=1;'
+              ' _gid=GA1.2.109886700.1525678234; _tower2_session=512d4e4dabfcd4e5c00fd8d430e974a3;'
+              ' _gat=1; _gat_teamTracker=1;'
+              ' intercom-session-xbtsuf77=eXRZeHpadkdMNkF0ekY5UnMvLytONU9wTHZjOUJhaGlkK1dqUXFmYXdRVXQ3M3AzTFVVSXVsd21SZkdoZ1lVRC0tTU1EZFplRVh1ZXhlOW43TDdLZnQrZz09--328d5d9f8a9a12659000a7efd238d4164448d7b8;'
+              ' remember_token=26bcc67f-d848-457a-a9da-11025384b70c'
 }
 # 当日时间
 today = time.strftime("%Y-%m-%d", time.localtime())
-
+# 检查结果
 report = ""
 
 
@@ -112,11 +117,11 @@ def get_plan_item():
         soup = BeautifulSoup(data.text, 'lxml')
         plan_links = soup.select('div.todo-wrap > span.todo-content > span.content-linkable > a')
         # 遍历每个项目url
-        for index, item in enumerate(plan_links):
-            print(pos, "#", item)
-            check_data = requests.get(format_url(item.get('href')), headers=headers)
+        for plan_link in plan_links:
+            print(pos, "#", plan_link)
+            check_data = requests.get(format_url(plan_link.get('href')), headers=headers)
             check_soup = BeautifulSoup(check_data.text, 'lxml')
-            check_item_quicklinks = check_soup.select('div.check-item > a.label.check-item-quicklink')
+            quick_links = check_soup.select('div.check-item > a.label.check-item-quicklink')
             check_links = check_soup.select('div.event-head > a')
             # 遍历项目中每个检查项的操作时间
             for check_link in check_links:
@@ -124,12 +129,13 @@ def get_plan_item():
                     check_flag[pos] = 1
                     break
             # 判断是否当日任务未标记完成
-            for quicklink_pos in range(len(check_item_quicklinks)):
-                if check_item_quicklinks[quicklink_pos].select('span.due'):
-                    if today in check_item_quicklinks[quicklink_pos].select('span.due')[0].get_text():
+            for check_item in quick_links:
+                if plan_link.select('span.due'):
+                    if today in check_item.select('span.due')[0].get_text():
                         # 获取即将延期的检查项名称
-                        check_quicklink[pos] += "\n" + check_soup.select(
-                            'div.check-item > a.check-item-name > span.check_item-rest')[quicklink_pos].get_text()
+                        check_today[pos] += "\n" + check_soup.select(
+                            'div.check-item > a.check-item-name > span.check_item-rest')[
+                            quick_links.index(check_item)].get_text()
                         check_flag[pos] += 2
                         break
 
@@ -157,20 +163,22 @@ def get_check_result():
         if check_flag[index] == 0:
             ding_mobile[index] = user_mobile[index]
             report += user[index] + '今日项目规划还未写' + "\n"
-            print(user[index] + '今日项目规划还未写' + "\n")
         if check_flag[index] >= 2:
             ding_mobile[index] = user_mobile[index]
-            report += user[index] + check_quicklink[index] + '检查项任务即将延期' + "\n"
+            report += user[index] + check_today[index] + '检查项任务即将延期' + "\n"
 
 
 # 同步钉钉机器人
 def send_ding():
-    if report == '':
+    global report
+    if report is None:
         print(today + "日报都写了")
         return
     # 钉钉@数量超过5个时第6个会失效，第一个@
     if ding_mobile[0] == user_mobile[0] or ding_mobile[0] == '':
         del ding_mobile[0]
+    if is_server:
+        report = '(服务器定时提醒)\n' + report
     data = {
         "msgtype": "text",
         "text": {

@@ -1,5 +1,5 @@
 ﻿@echo off  
 C:  
 cd %cd%
-start python tower_im.py  
+start python write_diary.py
 exit

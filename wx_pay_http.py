@@ -1,5 +1,5 @@
 # coding:utf-8
-from wx_pay_util import parse_to_xml, get_sign, trans_xml_to_dict
+import wx_pay_util
 import requests
 
 data = {
@@ -15,11 +15,11 @@ url = "https://api.mch.weixin.qq.com/pay/orderquery"
 
 
 def get_response():
-    request_data = get_sign(data, secret)
-    # print(parse_to_xml(request_data))
-    response = requests.post(url, data=parse_to_xml(request_data))
+    wechat = wx_pay_util.WechatDroid(data, secret)
+    # print(wechat.parse_to_xml())
+    response = requests.post(url, data=wechat.parse_to_xml())
     # print(bytes.decode(response.content))
-    print(trans_xml_to_dict(parse_to_xml(request_data)))
+    print(wechat.trans_xml_to_dict())
     with open('WX.txt', "wb") as out:
         out.write(response.content)
 
