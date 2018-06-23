@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import requests
 import time
 import json
+import datetime
 
 # 项目规划首页
 projectUrl = 'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/'
@@ -69,21 +70,9 @@ ding_header = {
     "charset": "utf-8"
 }
 
-headers = {
-    'Host': 'tower.im',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-    'Referer': 'https://tower.im/users/sign_in',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'zh-CN,zh;q=0.9',
-    'Cookie': 'intercom-lou-vgeb94xf=1; intercom-id-vgeb94xf=546b02a0-1fc5-4f33-ba45-7393cb139cc6;'
-              ' _ga=GA1.2.2059481265.1510972641; intercom-lou-xbtsuf77=1;'
-              ' _gid=GA1.2.109886700.1525678234; _tower2_session=512d4e4dabfcd4e5c00fd8d430e974a3;'
-              ' _gat=1; _gat_teamTracker=1;'
-              ' intercom-session-xbtsuf77=eXRZeHpadkdMNkF0ekY5UnMvLytONU9wTHZjOUJhaGlkK1dqUXFmYXdRVXQ3M3AzTFVVSXVsd21SZkdoZ1lVRC0tTU1EZFplRVh1ZXhlOW43TDdLZnQrZz09--328d5d9f8a9a12659000a7efd238d4164448d7b8;'
-              ' remember_token=26bcc67f-d848-457a-a9da-11025384b70c'
+cookies = {
+    'Cookie': 'remember_token=26bcc67f-d848-457a-a9da-11025384b70c;'
+              '_tower2_session=507659259737fd575bffd470d9b770b9;'
 }
 # 当日时间
 today = time.strftime("%Y-%m-%d", time.localtime())
@@ -93,7 +82,7 @@ report = ""
 
 # 获取每个人的项目计划url
 def get_plan_url():
-    data = requests.get(format_url(projectUrl), headers=headers)
+    data = requests.get(format_url(projectUrl), cookies=cookies)
     soup = BeautifulSoup(data.text, 'lxml')
     home_links = soup.select('div.title > h4 > span.name > a')
     i = 0
@@ -113,13 +102,13 @@ def format_url(str):
 # 遍历每个人的项目计划url
 def get_plan_item():
     for pos in range(0, len(plan_home_url)):
-        data = requests.get(format_url(plan_home_url[pos]), headers=headers)
+        data = requests.get(format_url(plan_home_url[pos]), cookies=cookies)
         soup = BeautifulSoup(data.text, 'lxml')
         plan_links = soup.select('div.todo-wrap > span.todo-content > span.content-linkable > a')
         # 遍历每个项目url
         for plan_link in plan_links:
             print(pos, "#", plan_link)
-            check_data = requests.get(format_url(plan_link.get('href')), headers=headers)
+            check_data = requests.get(format_url(plan_link.get('href')), cookies=cookies)
             check_soup = BeautifulSoup(check_data.text, 'lxml')
             quick_links = check_soup.select('div.check-item > a.label.check-item-quicklink')
             check_links = check_soup.select('div.event-head > a')
@@ -145,7 +134,7 @@ def check_daily():
     global report
     # 遍历每个日报的url
     for pos in range(len(daily_url)):
-        data = requests.get(format_url(daily_url[pos]), headers=headers)
+        data = requests.get(format_url(daily_url[pos]), cookies=cookies)
         soup = BeautifulSoup(data.text, 'lxml')
         links = soup.select('div.comment-main > div.info > a.create-time')
         if links:
@@ -178,7 +167,7 @@ def send_ding():
     if ding_mobile[0] == user_mobile[0] or ding_mobile[0] == '':
         del ding_mobile[0]
     if is_server:
-        report = '(服务器定时提醒)\n' + report
+        report = datetime.datetime.now().strftime('%H:%M:%S') + '(服务器定时提醒)\n' + report
     data = {
         "msgtype": "text",
         "text": {
@@ -195,8 +184,6 @@ def send_ding():
 
 
 if __name__ == '__main__':
-    if is_server:
-        headers['Host'] = 'hk.tower.im'
     check_daily()
     get_plan_url()
     get_plan_item()
