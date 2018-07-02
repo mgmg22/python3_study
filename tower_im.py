@@ -39,12 +39,12 @@ user_mobile = [
 ]
 # 日报地址，目前是写死的
 daily_url = [
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/e36fbb2a93db43a3bb934bf64cddc46b/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/4f90802f997248e1a1f2ac3d232d5220/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/37f7e52806c04e0e914e452e8beb9a36/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/2af574c4b806406f817ccccf7272aeaa/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/7e4c79b39e764fdeb4c262156247f2f5/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/2735ce7f6e984ce7a684c1b7f98cb8d1/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/fd8d943c60644147bd8cb0d3d36dc66b/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/e42a103f45354e4d962a3e9e18dabc3d/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/cf25e1f464f943aebad40c62cedf1894/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/68ae7809dac24561a7f422546a1a61bb/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/eb99b871793f489aa51b8c7b54d2e9ac/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/7e8ca1788a324a9098762a1e04f34ab1/',
 ]
 
 # 每个成员项目计划首页的位置下标

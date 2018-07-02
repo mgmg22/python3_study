@@ -9,17 +9,17 @@ import time
 import json
 
 diary_home_url = 'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/lists/3593325114fa41348025e83e2579d1c4/show/'
-my_diary = 'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/e36fbb2a93db43a3bb934bf64cddc46b/comments'
+my_diary = 'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/fd8d943c60644147bd8cb0d3d36dc66b/comments'
 test_url = 'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/todos/aaf2644e670f4695ae2c1f80a977be04/comments'
 
 headers = {
-    'X-CSRF-Token': 'PpUJq3OjVl2Zcs/e+Ju6odouk7HNgWRx7MThbvzu/cJ/l8ZrPAPbY9tMDc7felvoai1HSa3gZIqYnbg/4Z1wZw==',
+    'X-CSRF-Token': 'f1QtY5A7L4LCKx0U8mTXa1Ke5nolnOL20NVTIAC1ZX8/B0KMONeWYgbiz0Cijga4a/Hm6ZpHjGhhfDIKipEonA==',
 }
 
 cookies = {
     'Cookie':
         'remember_token=26bcc67f-d848-457a-a9da-11025384b70c;'
-        '_tower2_session=507659259737fd575bffd470d9b770b9;'
+        '_tower2_session=8670f55da338c2d135e56c0b4bae8b00;'
 }
 my_diary_data = {
     '已完成:': '',
