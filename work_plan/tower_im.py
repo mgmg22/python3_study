@@ -46,20 +46,17 @@ daily_url = [
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/eb99b871793f489aa51b8c7b54d2e9ac/',
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/7e8ca1788a324a9098762a1e04f34ab1/',
 ]
-
-# 每个成员项目计划首页的位置下标
-urlPos = [
-    8,
-    10,
-    9,
-    11,
-    12,
-    7,
+# 每个成员的项目计划首页
+plan_home_url = [
+    'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/b9dd450e808743de958d450c29f3ebb0/show/',
+    'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/795c36f6c0594329a6502b254dbbae1a/show/',
+    'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/81e8d620cf914b65843582869155d4b1/show/',
+    'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/1a24c7ef701040f7b6f82bb982acb6b2/show/',
+    'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/f3f3a87ec2f94671b62f6a77768dff94/show/',
+    'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/50ee90a6302c47c3be8c39906ece1dc9/show/',
 ]
 # 发送钉钉通知时@的成员
 ding_mobile = [''] * len(user)
-# 每个成员的项目计划首页
-plan_home_url = [''] * len(user)
 # 项目规划检查结果，0为未写1为写了
 check_flag = [0] * len(user)
 # 任务即将延期
@@ -72,23 +69,14 @@ ding_header = {
 
 cookies = {
     'Cookie': 'remember_token=26bcc67f-d848-457a-a9da-11025384b70c;'
-              '_tower2_session=507659259737fd575bffd470d9b770b9;'
+              '_tower2_session=9fa1ec7ea4f4cf302aa9571a795bc731;'
 }
 # 当日时间
 today = time.strftime("%Y-%m-%d", time.localtime())
 # 检查结果
 report = ""
-
-
-# 获取每个人的项目计划url
-def get_plan_url():
-    data = requests.get(format_url(projectUrl), cookies=cookies)
-    soup = BeautifulSoup(data.text, 'lxml')
-    home_links = soup.select('div.title > h4 > span.name > a')
-    i = 0
-    for pos in urlPos:
-        plan_home_url[i] = home_links[pos].get('href')
-        i = i + 1
+# 脚本执行开始时间
+start_time = datetime.datetime.now()
 
 
 # url域名转化
@@ -111,7 +99,7 @@ def get_plan_item():
             check_data = requests.get(format_url(plan_link.get('href')), cookies=cookies)
             check_soup = BeautifulSoup(check_data.text, 'lxml')
             quick_links = check_soup.select('div.check-item > a.label.check-item-quicklink')
-            check_links = check_soup.select('div.event-head > a')
+            check_links = check_soup.select('div > div.event-head > a')
             # 遍历项目中每个检查项的操作时间
             for check_link in check_links:
                 if today in check_link.get_text():
@@ -119,14 +107,13 @@ def get_plan_item():
                     break
             # 判断是否当日任务未标记完成
             for check_item in quick_links:
-                if plan_link.select('span.due'):
+                if check_item.select('span.due'):
                     if today in check_item.select('span.due')[0].get_text():
                         # 获取即将延期的检查项名称
                         check_today[pos] += "\n" + check_soup.select(
                             'div.check-item > a.check-item-name > span.check_item-rest')[
                             quick_links.index(check_item)].get_text()
                         check_flag[pos] += 2
-                        break
 
 
 # 检查日报
@@ -166,8 +153,7 @@ def send_ding():
     # 钉钉@数量超过5个时第6个会失效，第一个@
     if ding_mobile[0] == user_mobile[0] or ding_mobile[0] == '':
         del ding_mobile[0]
-    if is_server:
-        report = datetime.datetime.now().strftime('%H:%M:%S') + '(服务器定时提醒)\n' + report
+    report = '脚本耗时{}秒\n'.format((datetime.datetime.now() - start_time).seconds) + report
     data = {
         "msgtype": "text",
         "text": {
@@ -178,14 +164,13 @@ def send_ding():
         }
     }
     ding_data = json.dumps(data)
-    print(ding_mobile)
-    print(data)
-    req = requests.post(ding_url, data=ding_data, headers=ding_header)
+    print('@的人：', ding_mobile)
+    print("通知数据：", data)
+    requests.post(ding_url, data=ding_data, headers=ding_header)
 
 
 if __name__ == '__main__':
     check_daily()
-    get_plan_url()
     get_plan_item()
     get_check_result()
     send_ding()
