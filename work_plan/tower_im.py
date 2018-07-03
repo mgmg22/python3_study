@@ -56,11 +56,11 @@ plan_home_url = [
     'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/50ee90a6302c47c3be8c39906ece1dc9/show/',
 ]
 # 发送钉钉通知时@的成员
-ding_mobile = [''] * len(user)
+ding_mobile = [''] * len(plan_home_url)
 # 项目规划检查结果，0为未写1为写了
-check_flag = [0] * len(user)
+check_flag = [0] * len(plan_home_url)
 # 任务即将延期
-check_today = [''] * len(user)
+check_today = [''] * len(plan_home_url)
 
 ding_header = {
     "Content-Type": "application/json",
@@ -106,13 +106,12 @@ def get_plan_item():
                     check_flag[pos] = 1
                     break
             # 判断是否当日任务未标记完成
-            for check_item in quick_links:
+            for index, check_item in enumerate(quick_links):
                 if check_item.select('span.due'):
                     if today in check_item.select('span.due')[0].get_text():
                         # 获取即将延期的检查项名称
                         check_today[pos] += "\n" + check_soup.select(
-                            'div.check-item > a.check-item-name > span.check_item-rest')[
-                            quick_links.index(check_item)].get_text()
+                            'div.check-item > a.check-item-name > span.check_item-rest')[index].get_text()
                         check_flag[pos] += 2
 
 
