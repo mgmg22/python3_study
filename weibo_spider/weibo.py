@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import requests
 from wordcloud import WordCloud
 
+# api = 'https://m.weibo.cn/api/container/getIndex?pids[]=Pl_Official_MyProfileFeed__20&pids[]=Pl_Official_MyProfileFeed__20&profile_ftype[]=1&profile_ftype[]=1&is_all[]=1&is_all[]=1&jumpfrom=weibocom&sudaref=login.sina.com.cn&type=uid&value=2843500544&containerid=1076032843500544&page=%s'
 api = 'https://m.weibo.cn/api/container/getIndex?uid=5088151536&luicode=10000011&lfid=1076035088151536&type=uid&value=5088151536&containerid=1076035088151536&page=%s'
 csv_path = 'weibo.csv'
 
@@ -73,13 +74,14 @@ def generate_img(texts):
     data = " ".join(text for text in texts)
     mask_img = plt.imread('./heart-mask.jpg')
     wordcloud = WordCloud(
+        scale=2,
         font_path='msyh.ttc',
         background_color='white',
         mask=mask_img
     ).generate(data)
     plt.imshow(wordcloud)
     plt.axis('off')
-    plt.savefig('./heart.jpg', dpi=600)
+    wordcloud.to_file('./wordcloud.jpg')
 
 
 if __name__ == '__main__':
