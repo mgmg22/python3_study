@@ -3,7 +3,7 @@
 # @File  : weekly.py
 # @Author: sxs
 # @Date  : 2018/7/2
-# @Desc  :生成周报
+# @Desc  :根据模板生成周报
 import calendar
 import datetime
 import requests
@@ -18,15 +18,10 @@ context = {
     'week': int(datetime.datetime.now().day / 7) + 1,
     'mylisting': Listing('the listing\nwith\nsome\nlines \a and some paragraph \a and special chars : <>&'),
     'tasks': [
-        {'name': 'Python interpreters', 'progress': 10, 'state': '产品会'},
-        {'name': 'Django projects', 'progress': 55, 'state': '已上线'},
-        {'name': 'Guido', 'progress': 100, 'state': ''},
+        {'name': '付呗重构', 'progress': 10, 'state': '产品会'},
+        {'name': '服务化', 'progress': 100, 'state': ''},
     ],
-    'plans': [
-        {'name': 'Python interpreters', 'time': '04/12 —04/14'},
-        {'name': 'Python interpreters', 'time': '04/12 —04/14'},
-        {'name': 'Python interpreters', 'time': '04/12 —04/14'}
-    ],
+    'plans': [],
 }
 cookies = {
     'Cookie': 'remember_token=26bcc67f-d848-457a-a9da-11025384b70c;'
@@ -40,6 +35,8 @@ def next_week_plan():
 
 def save_tpl():
     tpl = DocxTemplate('base_tpl.docx')
+    plan = {'name': '付呗重构', 'time': get_next_time()}
+    context.get("plans").append(plan)
     tpl.render(context)
     tpl.save('sxs周报.docx')
 
@@ -63,6 +60,6 @@ def get_my_plan():
 
 
 if __name__ == '__main__':
-    # save_tpl()
-    # print(get_next_time())
-    get_my_plan()
+    save_tpl()
+    print(get_next_time())
+    # get_my_plan()

@@ -40,8 +40,8 @@ user_mobile = [
 # 日报地址，目前是写死的
 daily_url = [
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/fd8d943c60644147bd8cb0d3d36dc66b/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/e42a103f45354e4d962a3e9e18dabc3d/',
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/cf25e1f464f943aebad40c62cedf1894/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/e42a103f45354e4d962a3e9e18dabc3d/',
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/68ae7809dac24561a7f422546a1a61bb/',
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/eb99b871793f489aa51b8c7b54d2e9ac/',
     'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/7e8ca1788a324a9098762a1e04f34ab1/',
@@ -49,8 +49,8 @@ daily_url = [
 # 每个成员的项目计划首页
 plan_home_url = [
     'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/b9dd450e808743de958d450c29f3ebb0/show/',
-    'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/795c36f6c0594329a6502b254dbbae1a/show/',
     'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/81e8d620cf914b65843582869155d4b1/show/',
+    'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/795c36f6c0594329a6502b254dbbae1a/show/',
     'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/1a24c7ef701040f7b6f82bb982acb6b2/show/',
     'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/f3f3a87ec2f94671b62f6a77768dff94/show/',
     'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/lists/50ee90a6302c47c3be8c39906ece1dc9/show/',

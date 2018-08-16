@@ -3,7 +3,7 @@
 # @File  : weibo.py
 # @Author: sxs
 # @Date  : 2018/7/21
-# @Desc  :
+# @Desc  :微博数据-词云
 import codecs
 import csv
 import os
