@@ -3,29 +3,30 @@
 # @Author: sxs
 # @Date  : 2018/6/20
 # @Desc  :
+import time
+
 import requests
 from bs4 import BeautifulSoup
-import time
-import json
 
 diary_home_url = 'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/lists/3593325114fa41348025e83e2579d1c4/show/'
 my_diary = 'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/fd8d943c60644147bd8cb0d3d36dc66b/comments'
 test_url = 'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/todos/aaf2644e670f4695ae2c1f80a977be04/comments'
-
+debug = False
 headers = {
-    'X-CSRF-Token': 'f1QtY5A7L4LCKx0U8mTXa1Ke5nolnOL20NVTIAC1ZX8/B0KMONeWYgbiz0Cijga4a/Hm6ZpHjGhhfDIKipEonA==',
+    'X-CSRF-Token': 'Mi8+Q1KREM0NGD0UiTO7gkbgi2ZKPARBq+2F9oKCdohSr8xDlY1O7V7i31sCBPiSB3Hs0qwd6q+6I1Jgg55fpQ==',
 }
 
 cookies = {
     'Cookie':
         'remember_token=26bcc67f-d848-457a-a9da-11025384b70c;'
-        '_tower2_session=8670f55da338c2d135e56c0b4bae8b00;'
+        '_tower2_session=47ffdf2bbed507195598cce5c59b8cd6'
 }
 my_diary_data = {
-    '已完成:': '',
     '进行中:': '',
+    '已完成:': '',
     '未完成:': '',
     '明日任务:': '',
+    '目前存在的问题:': '',
 }
 my_diary_request = {
     'conn_guid': '7fdb35b9-c834-4d5c-9493-223a5a9720b1',
@@ -71,7 +72,7 @@ def write_my_diary():
         print(key)
         my_diary_data[key] = input()
     my_diary_request['comment_content'] = format_to_html(my_diary_data)
-    result = requests.post(my_diary, headers=headers, cookies=cookies, data=my_diary_request)
+    result = requests.post(debug and test_url or my_diary, headers=headers, cookies=cookies, data=my_diary_request)
     if result.status_code == 200:
         print(today, '日报发送成功')
     else:
@@ -80,9 +81,9 @@ def write_my_diary():
 
 # 日报内容转成html
 def format_to_html(data):
-    html = '<p>{}</p>'.format(today + "日报")
+    html = '<p><b>{}</b></p>'.format(today + "日报")
     for key in data.keys():
-        html += "<p>{0}</p><p>{1}</p>".format(key, data.get(key))
+        html += "<p><b>{0}</b></p><p><b>{1}</b></p>".format(key, data.get(key))
     return html
 
 

@@ -15,6 +15,7 @@ projectUrl = 'https://tower.im/projects/29fa2bc07a984a84aed9e3593d507c25/'
 ding_url = "https://oapi.dingtalk.com/robot/send?access_token=1fc402abdd2b7dec04921423b45415687f19dd817d4fdae699ca703e855745d1"
 # 标识服务器环境为1
 is_server = 0
+verify = False
 user = [
     ' 沈晓顺 ',
     # xsd
@@ -39,12 +40,12 @@ user_mobile = [
 ]
 # 日报地址，目前是写死的
 daily_url = [
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/fd8d943c60644147bd8cb0d3d36dc66b/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/cf25e1f464f943aebad40c62cedf1894/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/e42a103f45354e4d962a3e9e18dabc3d/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/68ae7809dac24561a7f422546a1a61bb/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/eb99b871793f489aa51b8c7b54d2e9ac/',
-    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/7e8ca1788a324a9098762a1e04f34ab1/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/486e9a8fea7c46748efdbcda13e3d846/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/04fbd653c4a0441eb6e0c1ab281802ab/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/03a7cd7d66bf45cd88196f2053dc31ee/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/7364d59e0d334b518e00ea9f8e596439/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/9ef753698689472eb7bf1cd45e8e9ae4/',
+    'https://tower.im/projects/122a4eafcf1643f6bec2bba9d776fc7f/todos/65f79da2687e4d47a3c085841ccbbfa6/',
 ]
 # 每个成员的项目计划首页
 plan_home_url = [
@@ -69,7 +70,7 @@ ding_header = {
 
 cookies = {
     'Cookie': 'remember_token=26bcc67f-d848-457a-a9da-11025384b70c;'
-              '_tower2_session=9fa1ec7ea4f4cf302aa9571a795bc731;'
+              '_tower2_session=6e815a4fb688cf0ef6e6f4bc43fd89a4;'
 }
 # 当日时间
 today = time.strftime("%Y-%m-%d", time.localtime())
@@ -77,6 +78,8 @@ today = time.strftime("%Y-%m-%d", time.localtime())
 report = ""
 # 脚本执行开始时间
 start_time = datetime.datetime.now()
+
+session = requests.session()
 
 
 # url域名转化
@@ -90,13 +93,13 @@ def format_url(str):
 # 遍历每个人的项目计划url
 def get_plan_item():
     for pos in range(0, len(plan_home_url)):
-        data = requests.get(format_url(plan_home_url[pos]), cookies=cookies)
+        data = session.get(format_url(plan_home_url[pos]), verify=verify)
         soup = BeautifulSoup(data.text, 'lxml')
         plan_links = soup.select('div.todo-wrap > span.todo-content > span.content-linkable > a')
         # 遍历每个项目url
         for plan_link in plan_links:
             print(pos, "#", plan_link)
-            check_data = requests.get(format_url(plan_link.get('href')), cookies=cookies)
+            check_data = session.get(format_url(plan_link.get('href')), verify=verify)
             check_soup = BeautifulSoup(check_data.text, 'lxml')
             quick_links = check_soup.select('div.check-item > a.label.check-item-quicklink')
             check_links = check_soup.select('div > div.event-head > a')
@@ -120,7 +123,7 @@ def check_daily():
     global report
     # 遍历每个日报的url
     for pos in range(len(daily_url)):
-        data = requests.get(format_url(daily_url[pos]), cookies=cookies)
+        data = session.get(format_url(daily_url[pos]), cookies=cookies, verify=verify)
         soup = BeautifulSoup(data.text, 'lxml')
         links = soup.select('div.comment-main > div.info > a.create-time')
         if links:
