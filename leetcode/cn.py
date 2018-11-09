@@ -49,5 +49,29 @@ class Solution:
                 if middle_num > left_num and middle_num > right_num:
                     return index + 1
 
+    """
+    807. 保持城市天际线
+    """
 
-print(Solution.findPeakElement("", [1, 2, 3, 1]))
+    def maxIncreaseKeepingSkyline(self, grid):
+        size = grid.__len__()
+        line_max = [0] * size
+        raw_max = [0] * size
+        for i in range(0, size):
+            print(grid[i])
+            for j in range(0, size):
+                if grid[i][j] > raw_max[i]:
+                    raw_max[i] = grid[i][j]
+                if grid[j][i] > line_max[i]:
+                    line_max[i] = grid[j][i]
+        result = 0
+        for x in range(0, size):
+            for y in range(0, size):
+                result += min(line_max[x], raw_max[y]) - grid[x][y]
+        # print(raw_max, line_max)
+        return result
+
+
+if __name__ == '__main__':
+    # print(Solution.findPeakElement("", [1, 2, 3, 1]))
+    print(Solution.maxIncreaseKeepingSkyline("", [[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 0]]))
