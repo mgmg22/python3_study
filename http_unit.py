@@ -22,6 +22,12 @@ def md5(before_str):
 head = {
     "access-token": '817ed196dcf669dc4fddf6de618bb753'
 }
+
+youdian_head = {
+    "Charset": 'UTF-8',
+    "clientSort": 'android',
+    "version": '5.0.1.0-8'
+}
 # 生成验签的key
 key = '0226dee8829c64a16c53a3029f8ddb69'
 
@@ -36,10 +42,10 @@ def unit_get():
     print(md5(str))
 
 
+# fubei 接口
 def unit_post():
     url = 'https://merchantapp-admin-test.51fubei.com/app/public/upload-image'
     token = head.get('access-token')
-    # before_str = '{"image":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAdCAYAAAAgqdWEAAAARUlEQVRIie3QsREAIAjAQHEo9t8MbbyzSQ1FfoJcIjNrDbG7A37GEGOIMcQYYgwxhhhDjCHGkFExUVd3xDPqjDHEGGIMOWEsBdbhfqZlAAAAAElFTkSuQmCC"}'
     before_str = '{"image":"/9j/4AAQSkZJRgABAQAAAQAZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAAdACMDAEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NT6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8BAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSdYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqwsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAKKAP6W/wDiFZ/4KJf9Fn/Y2/8ADifHb/6Gij/iFZ/4Ev+IVn/AIKJf9Fn/Y2/8OJ8dv8A6Gij/iFZ/wCCiX/RZ/2Nv/DifHb/AOhor++KJf9Fn/Y2/8ADifHb/6Giiv"}'
     req_body = json.loads(before_str)
     req_body['sign'] = md5(before_str + token + key)
@@ -48,5 +54,15 @@ def unit_post():
     print(data.text)
 
 
+# 友店商户版接口测试
+def test_youdian():
+    url = 'http://youdian-app-test.51youdian.com:8081/saledianMerchant/LifeCircle/User/login'
+    before_str = '{"platform":"1", "password":"6846860684f05029abccc09a53cd66f1", "sign":"e812182fef64438ecee33d66c4bffaee", "apb_nonce":"e4b362e2e51c40e38d77c1c142b54421", "username":"多通道1", "registrationId":"140fe1da9e9a212147f"}'
+    req_body = json.loads(before_str)
+    data = requests.post(url, headers=youdian_head, data=req_body)
+    print(data.text)
+
+
 if __name__ == '__main__':
-    unit_post()
+    # unit_post()
+    test_youdian()
