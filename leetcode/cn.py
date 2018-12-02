@@ -128,10 +128,34 @@ class Solution:
         print(str)
         return len(str)
 
+    """
+     3. 无重复字符的最长子串
+     """
+
+    def lengthOfLongestSubstring(self, s):
+        string_arr = list(s)
+        # 保存每个不重复字符最后出现的位置
+        char_dist = {}
+        # 保存循环到当前位置时的最长子串 TODO 优化算法
+        size_arr = [0] * s.__len__()
+        max_save = 0
+        for i in range(len(string_arr)):
+            last_char = char_dist.get(string_arr[i])
+            size_arr[i] = i + 1 - max(int(last_char or 0), i - size_arr[i - 1])
+            # 更新当前位置的最长子串
+            char_dist[string_arr[i]] = i + 1
+        # print(size_arr)
+        result = 0
+        for item in size_arr:
+            if item > result:
+                result = item
+        return result
+
 
 if __name__ == '__main__':
     x = Solution
     # print(Solution.findPeakElement("", [1, 2, 3, 1]))
     # print(Solution.maxIncreaseKeepingSkyline("", [[3, 0, 8, 4], [2, 4, 5, 7], [9, 2, 6, 3], [0, 3, 1, 0]]))
     # print(x.longestPalindrome("", "cbbd"))
-    print(x.minimumLengthEncoding("", ["time", "me", "bell"]))
+    # print(x.minimumLengthEncoding("", ["time", "me", "bell"]))
+    print(x.lengthOfLongestSubstring("", "abcabcbb"))
