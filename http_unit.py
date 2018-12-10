@@ -63,6 +63,27 @@ def test_youdian():
     print(data.text)
 
 
+# crm接口测试
+def test_crm():
+    url = 'http://172.16.21.240:8086/gateway'
+    content = {
+        "mobile": "15757179463",
+        "userId": "123"
+    }
+    crm_body = {
+        "appid": "123",
+        "method": "fshows.market.api.openaccount.merchant.precreate",
+        "token": "123",
+        "sign": "456",
+        "version": "1.0",
+        "appinfo": {},
+        "content": json.dumps(content)
+    }
+    data = requests.post(url, data=crm_body)
+    print(data.text)
+
+
 if __name__ == '__main__':
     # unit_post()
-    test_youdian()
+    # test_youdian()
+    test_crm()
