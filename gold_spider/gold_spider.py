@@ -40,17 +40,24 @@ def get_gm():
 def get_ICBC():
     result = session.post(ICBC_url, data=icbc)
     data = json.loads(result.text)
-    print(data['market'][0]['buyprice'], data['market'][0]['sellprice'])
-    gold['工行'] = "{}\t买入: {}".format(data['market'][0]['buyprice'], data['market'][0]['sellprice'])
+    # print(data)
+    gold['工行'] = "{}\t买: {}\t {}\t{}".format(
+        data['market'][0]['buyprice'],
+        data['market'][0]['sellprice'],
+        data['market'][0]['openprice_dr'],
+        data['market'][0]['openprice_dv'])
+    print(gold['工行'])
 
 
 # 招行黄金价格
 def get_cmb():
     result = session.get(CMB_url)
     data = json.loads(result.text)
-    print(data['Msg'][0]['MetPrc'], data['Msg'][1]['MetPrc'])
-    gold['招行'] = "{}\t买入: {}\t涨跌幅: {}".format(data['Msg'][0]['MetPrc'], data['Msg'][1]['MetPrc'],
-                                              data['Msg'][2]['MetPrc'])
+    gold['招行'] = "{}\t买: {}\t {}".format(
+        data['Msg'][0]['MetPrc'],
+        data['Msg'][1]['MetPrc'],
+        data['Msg'][2]['PrcCvt'] + data['Msg'][2]['MetPrc'] + "%")
+    print(gold['招行'])
 
 
 # 通知钉钉机器人
