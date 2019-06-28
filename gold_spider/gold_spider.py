@@ -10,14 +10,13 @@ import json
 
 GM_url = 'https://www.gomegold.com/Index/MethodQuoteprice'
 ICBC_url = 'https://mybank.icbc.com.cn/servlet/AsynGetDataServlet'
+CMB_url = 'https://ai.cmbchina.com/MBWebService/AjaxMetModuleInfo.ashx?pageID=C8455BD9-8AD4-4B56-A193-22142C9EB3C1&moduleID=AC730DC5-8F5F-46BE-9DB4-9273E26205EC&ModuleName=MetPrc&randnum=0.5888150773659064'
 
 ding_url = "https://oapi.dingtalk.com/robot/send?access_token=aee7d29cb485f16a3e9c9546aed3f466fbe7743f1d630bc78636c732e7fcec58"
 ding_header = {
     "Content-Type": "application/json",
     "charset": "utf-8"
 }
-low = 267
-high = 275
 gold = {}
 session = requests.session()
 icbc = {
@@ -34,36 +33,43 @@ def get_gm():
     result = session.post(GM_url)
     data = json.loads(result.text)
     print(data['responseParams'])
-    gold['国美黄金'] = data['responseParams']
+    gold['国美'] = data['responseParams']
 
 
 # 工行黄金价格
 def get_ICBC():
     result = session.post(ICBC_url, data=icbc)
     data = json.loads(result.text)
-    print(data['market'][0]['buyprice'])
-    gold['工商银行'] = data['market'][0]['buyprice']
+    print(data['market'][0]['buyprice'], data['market'][0]['sellprice'])
+    gold['工行'] = "{}\t买入: {}".format(data['market'][0]['buyprice'], data['market'][0]['sellprice'])
+
+
+# 招行黄金价格
+def get_cmb():
+    result = session.get(CMB_url)
+    data = json.loads(result.text)
+    print(data['Msg'][0]['MetPrc'], data['Msg'][1]['MetPrc'])
+    gold['招行'] = "{}\t买入: {}\t涨跌幅: {}".format(data['Msg'][0]['MetPrc'], data['Msg'][1]['MetPrc'],
+                                              data['Msg'][2]['MetPrc'])
 
 
 # 通知钉钉机器人
 def send_ding():
+    result = ""
+    for key in gold:
+        result += str(key) + "\t" + str(gold[key]) + "\n"
     data = {
         "msgtype": "text",
         "text": {
-            "content": gold
+            "content": result
         }
     }
     ding_data = json.dumps(data)
     requests.post(ding_url, data=ding_data, headers=ding_header)
 
 
-def check_price(price):
-    global high, low
-    high = max(price, high)
-    low = low(price, low)
-
-
 if __name__ == '__main__':
     get_gm()
     get_ICBC()
+    get_cmb()
     send_ding()
