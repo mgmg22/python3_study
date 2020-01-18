@@ -73,9 +73,12 @@ def word_segment(texts):
 def generate_img(texts):
     data = " ".join(text for text in texts)
     mask_img = plt.imread('./heart-mask.jpg')
+    # mac系统使用该字体
+    font_path = "/System/Library/fonts/PingFang.ttc"
     wordcloud = WordCloud(
         scale=2,
-        font_path='msyh.ttc',
+        # font_path='msyh.ttc',
+        font_path=font_path,
         background_color='white',
         mask=mask_img
     ).generate(data)

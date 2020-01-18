@@ -5,14 +5,14 @@
 # @Date  : 2018/11/29
 # @Desc  : 爬黄金价格
 
-import requests
 import json
 
-GM_url = 'https://www.gomegold.com/Index/MethodQuoteprice'
+import requests
+
 ICBC_url = 'https://mybank.icbc.com.cn/servlet/AsynGetDataServlet'
 CMB_url = 'https://ai.cmbchina.com/MBWebService/AjaxMetModuleInfo.ashx?pageID=C8455BD9-8AD4-4B56-A193-22142C9EB3C1&moduleID=AC730DC5-8F5F-46BE-9DB4-9273E26205EC&ModuleName=MetPrc&randnum=0.5888150773659064'
 
-ding_url = "https://oapi.dingtalk.com/robot/send?access_token=aee7d29cb485f16a3e9c9546aed3f466fbe7743f1d630bc78636c732e7fcec58"
+ding_url = "https://oapi.dingtalk.com/robot/send?access_token=d91863f33abc66ac08b0381f544fa2f4df1905814ba75617eb668d06d61655bd"
 ding_header = {
     "Content-Type": "application/json",
     "charset": "utf-8"
@@ -26,14 +26,6 @@ icbc = {
     "isFirstTime": 1,
     "tranCode": "A00462"
 }
-
-
-# 国美黄金价格
-def get_gm():
-    result = session.post(GM_url)
-    data = json.loads(result.text)
-    print(data['responseParams'])
-    gold['国美'] = data['responseParams']
 
 
 # 工行黄金价格
@@ -53,10 +45,9 @@ def get_ICBC():
 def get_cmb():
     result = session.get(CMB_url)
     data = json.loads(result.text)
-    gold['招行'] = "{}\t买: {}\t {}".format(
-        data['Msg'][0]['MetPrc'],
-        data['Msg'][1]['MetPrc'],
-        data['Msg'][2]['PrcCvt'] + data['Msg'][2]['MetPrc'] + "%")
+    gold['招行'] = "{}\t {}".format(
+        data['scrollpgoldmsg'][0]['latestPrice'],
+        data['scrollpgoldmsg'][0]['upDownRange'] + "%")
     print(gold['招行'])
 
 
@@ -76,7 +67,6 @@ def send_ding():
 
 
 if __name__ == '__main__':
-    get_gm()
     get_ICBC()
     get_cmb()
     send_ding()
