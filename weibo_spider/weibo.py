@@ -14,8 +14,10 @@ import matplotlib.pyplot as plt
 import requests
 from wordcloud import WordCloud
 
+# 只需替换containerid
 # api = 'https://m.weibo.cn/api/container/getIndex?pids[]=Pl_Official_MyProfileFeed__20&pids[]=Pl_Official_MyProfileFeed__20&profile_ftype[]=1&profile_ftype[]=1&is_all[]=1&is_all[]=1&jumpfrom=weibocom&sudaref=login.sina.com.cn&type=uid&value=2843500544&containerid=1076032843500544&page=%s'
-api = 'https://m.weibo.cn/api/container/getIndex?uid=5088151536&luicode=10000011&lfid=1076035088151536&type=uid&value=5088151536&containerid=1076035088151536&page=%s'
+# api = 'https://m.weibo.cn/api/container/getIndex?uid=5088151536&luicode=10000011&lfid=1076035088151536&type=uid&value=5088151536&containerid=1076035088151536&page=%s'
+api = 'https://m.weibo.cn/api/container/getIndex?uid=5088151536&luicode=10000011&lfid=1076035088151536&type=uid&value=5088151536&containerid=1076031675055947&page=%s'
 csv_path = 'weibo.csv'
 
 
