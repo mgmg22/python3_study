@@ -24,5 +24,5 @@
 
 1.微信支付API练习（ing）
 
-2.读取AndroidManifest.xml文件
+2.读取AndroidManifest.xml文件，列出Activity清单
 
