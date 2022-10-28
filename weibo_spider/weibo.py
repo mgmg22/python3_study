@@ -5,6 +5,7 @@
 # @Date  : 2018/7/21
 # @Desc  :微博数据-词云
 import codecs
+import platform
 import csv
 import os
 import re
@@ -17,7 +18,9 @@ from wordcloud import WordCloud
 # 只需替换containerid
 # api = 'https://m.weibo.cn/api/container/getIndex?pids[]=Pl_Official_MyProfileFeed__20&pids[]=Pl_Official_MyProfileFeed__20&profile_ftype[]=1&profile_ftype[]=1&is_all[]=1&is_all[]=1&jumpfrom=weibocom&sudaref=login.sina.com.cn&type=uid&value=2843500544&containerid=1076032843500544&page=%s'
 # api = 'https://m.weibo.cn/api/container/getIndex?type=uid&value=1585747413&containerid=1076031585747413&page=%s'
-api = 'https://m.weibo.cn/api/container/getIndex?uid=5088151536&luicode=10000011&lfid=1076035088151536&type=uid&value=5088151536&containerid=1076031675055947&page=%s'
+api = 'https://m.weibo.cn/api/container/getIndex?containerid=1076035088151536&page=%s'
+# api = 'https://m.weibo.cn/api/container/getIndex?containerid=1076035564333165&page=%s'
+
 csv_path = 'weibo.csv'
 
 
@@ -25,6 +28,7 @@ def fetch_weibo():
     for i in range(1, 100):
         response = requests.get(url=api % i)
         # 没有该页数据跳出循环
+        # print(response.text)
         if response.json().get('ok') == 0:
             break
         print(f"正在爬取第{i}页")
@@ -76,11 +80,13 @@ def word_segment(texts):
 def generate_img(texts):
     data = " ".join(text for text in texts)
     mask_img = plt.imread('./heart-mask.jpg')
-    # mac系统使用该字体
-    font_path = "/System/Library/fonts/PingFang.ttc"
+    if platform.system() == "Windows":
+        font_path = 'msyh.ttc'
+    else:
+        # mac系统使用该字体
+        font_path = "/System/Library/fonts/PingFang.ttc"
     wordcloud = WordCloud(
         scale=2,
-        # font_path='msyh.ttc',
         font_path=font_path,
         background_color='white',
         mask=mask_img
@@ -92,8 +98,8 @@ def generate_img(texts):
 
 if __name__ == '__main__':
     if os.path.exists(csv_path):
-        pass
-    else:
-        write_csv(fetch_weibo())
+        os.remove(csv_path)
+        print("删除本地csv")
+    write_csv(fetch_weibo())
     word = word_segment(read_csv())
     generate_img(word)
