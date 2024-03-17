@@ -1,28 +1,28 @@
-# Python3 学习项目
+## Python3 学习项目
+* 青龙任务脚本（ing）：
+1. epic Epic 每周限免信息
+2. stock_spider 获取上证指数涨幅
+* 算法刷题：
+    [Leetcode](https://leetcode.cn/u/mgmg22/)
 
-算法：
+* 爬虫：
 
-[领扣](https://leetcode-cn.com/mgmg22/)
+1. jisilu_spider 爬取集思录帖子
 
-爬虫：
+2. tower.im 检查日报爬虫+钉钉机器人提醒
 
-1.jisilu_spider 爬取集思录帖子
+3. 微博爬虫+中文分词+词云
 
-2.tower.im 检查日报爬虫+钉钉机器人提醒
+4. ~~微信运动步数爬虫~~
 
-3.微博爬虫+中文分词+词云
+* 其他：
 
-~~4.微信运动步数爬虫~~
+1. 单元测试-后端post接口单元测试
 
-其他：
+2. 机器学习-tensorflow验证码生成和识别
 
-1.单元测试-后端post接口单元测试
+* py语法学习：
 
-2.机器学习-tensorflow验证码生成和识别
+1. 微信支付API练习
 
-语法学习：
-
-1.微信支付API练习（ing）
-
-2.读取AndroidManifest.xml文件，列出Activity清单
-
+2. 读取AndroidManifest.xml文件，列出Activity清单
