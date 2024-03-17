@@ -1,6 +1,6 @@
 import json
 import requests
-# import notify
+import notify
 from datetime import datetime
 
 
@@ -79,7 +79,7 @@ def notify_markdown(games: dict):
     ![{game['title']}]({images[game['title']]})
 
 '''
-    # notify.serverJMy("Epic 每周限免", content)
+    notify.serverJMy("Epic 每周限免", content)
     # with open(filename, 'w') as f:
     #     f.write(content)
 
