@@ -13,14 +13,14 @@ def get_stock_detail(stock):
     data = requests.get(url)
     data.encoding = 'utf-8'
     soup = BeautifulSoup(data.text, 'html.parser')
-    price = soup.select('#stock_detail > tr:nth-child(1) > td:nth-child(2)> span > a')
-    increase = soup.select('#stock_detail > tr:nth-child(1) > td:nth-child(3)> span')
-    name = soup.select('div.grid-row>table>tr>td>div>a')
-    print(name[0].text + price[0].text)
+    price = format(float(soup.select('#stock_detail > tr:nth-child(1) > td:nth-child(2)> span > a')[0].text), '.2f')
+    increase = soup.select('#stock_detail > tr:nth-child(1) > td:nth-child(3)> span')[0].text
+    name = soup.select('div.grid-row>table>tr>td>div>a')[0].text
+    print(name + price)
     swData = {
         'id': stock,
-        'name': name[0].text,
-        'price': price[0].text,
-        'increase': increase[0].text
+        'name': name,
+        'price': price,
+        'increase': increase
     }
     return swData
