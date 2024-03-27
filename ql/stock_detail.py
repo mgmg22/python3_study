@@ -12,7 +12,7 @@ def get_stock_detail(stock):
     url = 'https://www.jisilu.cn/data/stock/' + stock
     data = requests.get(url)
     data.encoding = 'utf-8'
-    soup = BeautifulSoup(data.text, 'lxml')
+    soup = BeautifulSoup(data.text, 'html.parser')
     price = soup.select('#stock_detail > tr:nth-child(1) > td:nth-child(2)> span > a')
     increase = soup.select('#stock_detail > tr:nth-child(1) > td:nth-child(3)> span')
     name = soup.select('div.grid-row>table>tr>td>div>a')
