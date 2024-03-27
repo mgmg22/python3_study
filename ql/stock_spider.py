@@ -25,9 +25,9 @@ fundFilters = {
 }
 
 stockFilters = {
+    '600519',
     '603605',
     '603444',
-    '600519',
 }
 
 notifyData = []
@@ -96,13 +96,13 @@ def notify_with_markdown():
         content += f'| {item["id"]} | {item["name"]} | {item["increase"]} %|\n'
     content += '''# 今日个股涨幅统计
 | 代码 | 名称 | 现价 | 涨幅 |
-|--------|--------|--------|--------|
+|--------|:--------|--------:|--------|
 '''
     for item in stockData:
         content += f'| {item["id"]} | {item["name"]} | {item["price"]} | {item["increase"]} |\n'
     notify.serverJMy(generate_title(), content)
-    # with open("Test.md", 'w') as f:
-    #     f.write(content)
+    with open("Test.md", 'w') as f:
+        f.write(content)
 
 
 def generate_title() -> str:
