@@ -1,7 +1,8 @@
 ## Python3 学习项目
-* 青龙任务脚本（ing）：
+* 青龙任务脚本：
 1. epic Epic 每周限免信息
-2. stock_spider 获取上证指数涨幅
+2. stock_spider 获取指数,ETF涨幅推送到微信
+3. stock_detail 获取个股现价与涨幅
 * 算法刷题：
     [Leetcode](https://leetcode.cn/u/mgmg22/)
 

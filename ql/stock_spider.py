@@ -7,25 +7,31 @@
 
 import notify
 import requests
+from stock_detail import get_stock_detail
 
 indexFilters = {
     '上证指数',
-    '上证50',
+    # '上证50',
     '科创50',
     '创业板指',
-    '沪深300',
+    # '沪深300',
     '北证50',
 }
 
 fundFilters = {
-    # 512690	酒ETF
-    # 512760	芯片ETF
     '酒ETF',
     '芯片ETF',
     '证券ETF',
 }
 
+stockFilters = {
+    '603605',
+    '603444',
+    '600519',
+}
+
 notifyData = []
+stockData = []
 
 
 # 指数涨幅统计
@@ -40,6 +46,12 @@ def get_index_increase():
                 'increase': row['cell']['increase_rt'],
             }
             notifyData.append(stock)
+
+
+# 个股涨幅统计
+def get_stock_increase():
+    for item in stockFilters:
+        stockData.append(get_stock_detail(item))
 
 
 # etf涨幅统计
@@ -82,9 +94,15 @@ def notify_with_markdown():
 '''
     for item in notifyData:
         content += f'| {item["id"]} | {item["name"]} | {item["increase"]} %|\n'
+    content += '''# 今日个股涨幅统计
+| 代码 | 名称 | 现价 | 涨幅 |
+|--------|--------|--------|--------|
+'''
+    for item in stockData:
+        content += f'| {item["id"]} | {item["name"]} | {item["price"]} | {item["increase"]} |\n'
     notify.serverJMy(generate_title(), content)
-    with open("Test.md", 'w') as f:
-        f.write(content)
+    # with open("Test.md", 'w') as f:
+    #     f.write(content)
 
 
 def generate_title() -> str:
@@ -93,6 +111,7 @@ def generate_title() -> str:
 
 if __name__ == '__main__':
     get_index_increase()
+    get_stock_increase()
     get_fund_increase()
     add_sw_increase()
     notify_with_markdown()
