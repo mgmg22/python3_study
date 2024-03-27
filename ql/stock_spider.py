@@ -22,6 +22,7 @@ fundFilters = {
     # 512760	芯片ETF
     '酒ETF',
     '芯片ETF',
+    '证券ETF',
 }
 
 notifyData = []
@@ -77,7 +78,7 @@ def add_sw_increase():
 def notify_with_markdown():
     content = '''# 今日涨幅统计
 | 代码 | 名称 | 涨幅 |
-|:--------|:--------|--------:|
+|--------|--------|--------|
 '''
     for item in notifyData:
         content += f'| {item["id"]} | {item["name"]} | {item["increase"]} %|\n'
