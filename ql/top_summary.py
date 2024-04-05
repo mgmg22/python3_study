@@ -8,8 +8,6 @@ from bs4 import BeautifulSoup
 import requests
 import notify
 
-verify = False
-
 summary_list = []
 
 
@@ -31,7 +29,9 @@ def filter_tr(tr):
     conditions = [
         "剧集" in str(td_text2[0]),
         "综艺" in str(td_text2[0]),
+        "演出" in str(td_text2[0]),
         "电影" in str(td_text2[0]),
+        "音乐" in str(td_text2[0]),
         # todo emoji
         # "[舔屏]" in str(td_text2[0])
     ]
@@ -55,7 +55,7 @@ def get_top_summary():
     headers = {
         'Cookie': "SUB=_2AkMRUtBSf8NxqwFRmfsUxGrkbop-wg7EieKnDiGJJRMxHRl-yT9kql1ZtRB6OtL-vTbTNhcLy7AgHY2b5GT7UADcvUnR;"
     }
-    data = requests.get(url, headers=headers, verify=verify)
+    data = requests.get(url, headers=headers)
     data.encoding = 'utf-8'
     soup = BeautifulSoup(data.text, 'html.parser')
     tr_elements = soup.select('#pl_top_realtimehot > table > tbody> tr')
@@ -68,7 +68,7 @@ def notify_markdown():
     for item in summary_list:
         state_mark = f'【{item["state"]}】' if item['state'] else ''
         content += f'''
-[{item['title']}]({item['href']}){state_mark}
+[{item['title']}](https://s.weibo.com/{item['href']}){state_mark}
 '''
     notify.serverJMy(summary_list[0]["title"], content)
     with open("summary.md", 'w', encoding='utf-8') as f:
