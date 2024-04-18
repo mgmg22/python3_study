@@ -24,13 +24,15 @@ def filter_tr(tr):
     num = td_text1[0].get_text()
     href = td_text2[0].find('a')['href']
     state = td_text3[0].get_text()
+    # print(str(td_text2[0]))
     # 排除项
     conditions = [
-        "剧集" in str(td_text2[0]),
-        "综艺" in str(td_text2[0]),
-        "演出" in str(td_text2[0]),
-        "电影" in str(td_text2[0]),
-        "音乐" in str(td_text2[0]),
+        "<span>剧集" in str(td_text2[0]),
+        "<span>综艺" in str(td_text2[0]),
+        "<span>演出" in str(td_text2[0]),
+        "<span>电影" in str(td_text2[0]),
+        "<span>音乐" in str(td_text2[0]),
+        "<span>盛典" in str(td_text2[0]),
         "ad_id=" in str(td_text2[0]),
         # todo emoji
         # "[舔屏]" in str(td_text2[0])
@@ -46,7 +48,7 @@ def filter_tr(tr):
         'href': href,
         'state': state,
     }
-    # print(str(td_text2[0]))
+    print(str(td_text2[0]))
     summary_list.append(item)
 
 
