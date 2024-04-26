@@ -42,7 +42,6 @@ def filter_tr(tr):
         return False
     if any(conditions):
         return False
-    # todo 过滤广告
     item = {
         'title': num + "." + text,
         'href': href,

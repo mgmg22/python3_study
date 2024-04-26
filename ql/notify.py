@@ -29,53 +29,55 @@ def print(text, *args, **kw):
 # 通知服务
 # fmt: off
 push_config = {
-    'HITOKOTO': False,                  # 启用一言（随机句子）
+    'HITOKOTO': False,  # 启用一言（随机句子）
 
-    'BARK_PUSH': '',                    # bark IP 或设备码，例：https://api.day.app/DxHcxxxxxRxxxxxxcm/
-    'BARK_ARCHIVE': '',                 # bark 推送是否存档
-    'BARK_GROUP': '',                   # bark 推送分组
-    'BARK_SOUND': '',                   # bark 推送声音
+    'BARK_PUSH': '',  # bark IP 或设备码，例：https://api.day.app/DxHcxxxxxRxxxxxxcm/
+    'BARK_ARCHIVE': '',  # bark 推送是否存档
+    'BARK_GROUP': '',  # bark 推送分组
+    'BARK_SOUND': '',  # bark 推送声音
 
-    'CONSOLE': True,                    # 控制台输出
+    'CONSOLE': True,  # 控制台输出
 
-    'DD_BOT_SECRET': '',                # 钉钉机器人的 DD_BOT_SECRET
-    'DD_BOT_TOKEN': '',                 # 钉钉机器人的 DD_BOT_TOKEN
+    'DD_BOT_SECRET': '',  # 钉钉机器人的 DD_BOT_SECRET
+    'DD_BOT_TOKEN': '',  # 钉钉机器人的 DD_BOT_TOKEN
 
-    'FSKEY': '',                        # 飞书机器人的 FSKEY
+    'FSKEY': '',  # 飞书机器人的 FSKEY
 
-    'GOBOT_URL': '',                    # go-cqhttp
-                                        # 推送到个人QQ：http://127.0.0.1/send_private_msg
-                                        # 群：http://127.0.0.1/send_group_msg
-    'GOBOT_QQ': '',                     # go-cqhttp 的推送群或用户
-                                        # GOBOT_URL 设置 /send_private_msg 时填入 user_id=个人QQ
-                                        #               /send_group_msg   时填入 group_id=QQ群
-    'GOBOT_TOKEN': '',                  # go-cqhttp 的 access_token
+    'GOBOT_URL': '',  # go-cqhttp
+    # 推送到个人QQ：http://127.0.0.1/send_private_msg
+    # 群：http://127.0.0.1/send_group_msg
+    'GOBOT_QQ': '',  # go-cqhttp 的推送群或用户
+    # GOBOT_URL 设置 /send_private_msg 时填入 user_id=个人QQ
+    #               /send_group_msg   时填入 group_id=QQ群
+    'GOBOT_TOKEN': '',  # go-cqhttp 的 access_token
 
-    'GOTIFY_URL': '',                   # gotify地址,如https://push.example.de:8080
-    'GOTIFY_TOKEN': '',                 # gotify的消息应用token
-    'GOTIFY_PRIORITY': 0,               # 推送消息优先级,默认为0
+    'GOTIFY_URL': '',  # gotify地址,如https://push.example.de:8080
+    'GOTIFY_TOKEN': '',  # gotify的消息应用token
+    'GOTIFY_PRIORITY': 0,  # 推送消息优先级,默认为0
 
-    'IGOT_PUSH_KEY': '',                # iGot 聚合推送的 IGOT_PUSH_KEY
+    'IGOT_PUSH_KEY': '',  # iGot 聚合推送的 IGOT_PUSH_KEY
 
-    'PUSH_KEY': '',                     # server 酱的 PUSH_KEY，兼容旧版与 Turbo 版
+    'PUSH_KEY': '',  # server 酱的 PUSH_KEY，兼容旧版与 Turbo 版
 
-    'PUSH_PLUS_TOKEN': '',              # push+ 微信推送的用户令牌
-    'PUSH_PLUS_USER': '',               # push+ 微信推送的群组编码
+    'PUSH_PLUS_TOKEN': '',  # push+ 微信推送的用户令牌
+    'PUSH_PLUS_USER': '',  # push+ 微信推送的群组编码
 
-    'QMSG_KEY': '',                     # qmsg 酱的 QMSG_KEY
-    'QMSG_TYPE': '',                    # qmsg 酱的 QMSG_TYPE
+    'QMSG_KEY': '',  # qmsg 酱的 QMSG_KEY
+    'QMSG_TYPE': '',  # qmsg 酱的 QMSG_TYPE
 
-    'QYWX_AM': '',                      # 企业微信应用
+    'QYWX_AM': '',  # 企业微信应用
 
-    'QYWX_KEY': '',                     # 企业微信机器人
+    'QYWX_KEY': '',  # 企业微信机器人
 
-    'TG_BOT_TOKEN': '',                 # tg 机器人的 TG_BOT_TOKEN，例：1407203283:AAG9rt-6RDaaX0HBLZQq0laNOh898iFYaRQ
-    'TG_USER_ID': '',                   # tg 机器人的 TG_USER_ID，例：1434078534
-    'TG_API_HOST': '',                  # tg 代理 api
-    'TG_PROXY_AUTH': '',                # tg 代理认证参数
-    'TG_PROXY_HOST': '',                # tg 机器人的 TG_PROXY_HOST
-    'TG_PROXY_PORT': '',                # tg 机器人的 TG_PROXY_PORT
-    'PUSH_KEY_MY': '',                  # server 酱的 PUSH_KEY，兼容旧版与 Turbo 版  我的
+    'TG_BOT_TOKEN': '',  # tg 机器人的 TG_BOT_TOKEN，例：1407203283:AAG9rt-6RDaaX0HBLZQq0laNOh898iFYaRQ
+    'TG_USER_ID': '',  # tg 机器人的 TG_USER_ID，例：1434078534
+    'TG_API_HOST': '',  # tg 代理 api
+    'TG_PROXY_AUTH': '',  # tg 代理认证参数
+    'TG_PROXY_HOST': '',  # tg 机器人的 TG_PROXY_HOST
+    'TG_PROXY_PORT': '',  # tg 机器人的 TG_PROXY_PORT
+
+    'PUSH_KEY_MY': '',  # server 酱的 PUSH_KEY，兼容旧版与 Turbo 版  我的
+    'PUSH_PLUS_TOKEN_MY': '',  # push+ 微信推送的用户令牌  我的
 }
 notify_function = []
 # fmt: on
@@ -108,11 +110,11 @@ def bark(title: str, content: str) -> None:
     }
     params = ""
     for pair in filter(
-        lambda pairs: pairs[0].startswith("BARK_")
-        and pairs[0] != "BARK_PUSH"
-        and pairs[1]
-        and bark_params.get(pairs[0]),
-        push_config.items(),
+            lambda pairs: pairs[0].startswith("BARK_")
+                          and pairs[0] != "BARK_PUSH"
+                          and pairs[1]
+                          and bark_params.get(pairs[0]),
+            push_config.items(),
     ):
         params += f"{bark_params.get(pair[0])}={pair[1]}&"
     if params:
@@ -199,7 +201,7 @@ def go_cqhttp(title: str, content: str) -> None:
         print("go-cqhttp 推送失败！")
 
 
-def gotify(title:str,content:str)  -> None:
+def gotify(title: str, content: str) -> None:
     """
     使用 gotify 推送消息。
     """
@@ -209,8 +211,8 @@ def gotify(title:str,content:str)  -> None:
     print("gotify 服务启动")
 
     url = f'{push_config.get("GOTIFY_URL")}/message?token={push_config.get("GOTIFY_TOKEN")}'
-    data = {"title": title,"message": content,"priority": push_config.get("GOTIFY_PRIORITY")}
-    response = requests.post(url,data=data).json()
+    data = {"title": title, "message": content, "priority": push_config.get("GOTIFY_PRIORITY")}
+    response = requests.post(url, data=data).json()
 
     if response.get("id"):
         print("gotify 推送成功！")
@@ -296,6 +298,36 @@ def pushplus_bot(title: str, content: str) -> None:
             print("PUSHPLUS 推送失败！")
 
 
+def pushplus_bot_my(title: str, content: str) -> None:
+    if not push_config.get("PUSH_PLUS_TOKEN_MY"):
+        print("PUSHPLUS_MY 服务的 PUSH_PLUS_TOKEN_MY 未设置!!\n取消推送")
+        return
+    print("PUSHPLUS_MY 服务启动")
+
+    url = "http://www.pushplus.plus/send"
+    data = {
+        "token": push_config.get("PUSH_PLUS_TOKEN_MY"),
+        "title": title,
+        "content": content,
+        "template": "markdown"
+    }
+    body = json.dumps(data).encode(encoding="utf-8")
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(url=url, data=body, headers=headers).json()
+
+    if response["code"] == 200:
+        print("PUSHPLUS_MY 推送成功！")
+    else:
+        url_old = "http://pushplus.hxtrip.com/send"
+        headers["Accept"] = "application/json"
+        response = requests.post(url=url_old, data=body, headers=headers).json()
+
+        if response["code"] == 200:
+            print("PUSHPLUS_MY(hxtrip) 推送成功！")
+        else:
+            print("PUSHPLUS_MY 推送失败！")
+
+
 def qmsg_bot(title: str, content: str) -> None:
     """
     使用 qmsg 推送消息。
@@ -368,8 +400,8 @@ class WeCom:
 
     def send_text(self, message, touser="@all"):
         send_url = (
-            "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token="
-            + self.get_access_token()
+                "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token="
+                + self.get_access_token()
         )
         send_values = {
             "touser": touser,
@@ -385,8 +417,8 @@ class WeCom:
 
     def send_mpnews(self, title, message, media_id, touser="@all"):
         send_url = (
-            "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token="
-            + self.get_access_token()
+                "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token="
+                + self.get_access_token()
         )
         send_values = {
             "touser": touser,
@@ -457,12 +489,12 @@ def telegram_bot(title: str, content: str) -> None:
     proxies = None
     if push_config.get("TG_PROXY_HOST") and push_config.get("TG_PROXY_PORT"):
         if push_config.get("TG_PROXY_AUTH") is not None and "@" not in push_config.get(
-            "TG_PROXY_HOST"
+                "TG_PROXY_HOST"
         ):
             push_config["TG_PROXY_HOST"] = (
-                push_config.get("TG_PROXY_AUTH")
-                + "@"
-                + push_config.get("TG_PROXY_HOST")
+                    push_config.get("TG_PROXY_AUTH")
+                    + "@"
+                    + push_config.get("TG_PROXY_HOST")
             )
         proxyStr = "http://{}:{}".format(
             push_config.get("TG_PROXY_HOST"), push_config.get("TG_PROXY_PORT")
@@ -506,6 +538,8 @@ if push_config.get("PUSH_KEY"):
     notify_function.append(serverJ)
 if push_config.get("PUSH_PLUS_TOKEN"):
     notify_function.append(pushplus_bot)
+if push_config.get("PUSH_PLUS_TOKEN_MY"):
+    notify_function.append(pushplus_bot_my)
 if push_config.get("QMSG_KEY") and push_config.get("QMSG_TYPE"):
     notify_function.append(qmsg_bot)
 if push_config.get("QYWX_AM"):
@@ -537,10 +571,8 @@ def send(title: str, content: str) -> None:
 def main():
     send("title", "content")
 
+
 def serverJMy(title: str, content: str) -> None:
-    """
-    通过 serverJ 推送消息。
-    """
     if not push_config.get("PUSH_KEY_MY"):
         print("serverJ My服务的 PUSH_KEY_MY 未设置!!\n取消推送")
         return
@@ -555,6 +587,7 @@ def serverJMy(title: str, content: str) -> None:
         print("serverJ My推送成功！")
     else:
         print(f'serverJ My推送失败！错误码：{response["message"]}')
+
 
 if __name__ == "__main__":
     main()
