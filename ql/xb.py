@@ -8,73 +8,46 @@ xb_list = []
 def filter_list(tr):
     title = tr.get_text()
     href = 'http://www.0818tuan.com' + tr['href']
-    ignoreConditions = [
-        "【顶】" in title,
-        "定位" in title,
-        "首单" in title,
-        "山东" in title,
-        "福建" in title,
-        "江苏" in title,
-        "云南" in title,
-        "江西" in title,
-        "部分地区" in title,
-        "盲盒" in title,
-        "到手" in title,
-        "咨询" in title,
-        "茅台" in title,
-        "洗衣液" in title,
+    ignoreStrings = [
+        "【顶】",
+        "定位",
+        "首单", "盲盒",
+        "部分地区", "山东", "福建", "江苏", "云南", "江西", "河北", "广州",
+        "到手",
+        "茅台", "洗衣液", "內衣",
+        "流量",
+        "单车",
+        "请问", "有啥", "怎么", "黄了", "咨询",
     ]
-    if any(ignoreConditions):
+
+    if any(sub in title for sub in ignoreStrings):
         return False
     substrings = [
-        "转账",
-        "招行",
-        "工行",
-        "e生活",
-        "建行",
+        "招行", "掌上生活",
+        "工行", "e生活",
+        "建行", "建融",
         "中行",
         "农行",
         "交行",
         "浦发",
-        "中信",
-        "ysf",
-        "云闪付",
-        "动卡空间",
-        "掌上生活",
+        "中信", "动卡空间",
+        "微众",
+        "云闪付", "ysf",
         "邮储",
         "光大",
-        "zfb",
-        "支付宝",
-        "京东",
-        "京豆",
-        "手淘",
-        "淘宝",
-        "微信",
-        "vx",
-        "wx",
-        "小程序",
-        "抖音",
-        "dy",
-        "xyk",
-        "还款",
+        "zfb", "支付宝", "转账",
+        "京东", "京豆",
+        "手淘", "淘宝", "猫超",
+        "微信", "vx", "wx", "小程序",
+        "抖音", "dy",
+        "xyk", "还款",
         "红包",
-        "猫超",
-        "同程",
-        "携程",
-        "移动",
-        "和包",
-        "电信",
-        "麦当劳",
-        "肯德基",
-        "必胜客",
-        "星巴克",
-        "星礼卡",
-        "苹果卡",
-        "瑞幸",
-        "朴朴",
-        "喜茶",
-        "霸王茶姬",
-        "百果园",
+        "同程", "携程",
+        "移动", "和包", "电信",
+        "麦当劳", "肯德基", "必胜客", "星巴克",
+        "星礼卡", "苹果卡",
+        "瑞幸", "朴朴", "喜茶", "霸王茶姬", "百果园",
+        "深圳通",
     ]
     if any(sub in title for sub in substrings):
         print(title)
@@ -89,13 +62,16 @@ def filter_list(tr):
     xb_list.append(item)
 
 
-def get_content(href) -> Tag:
+def get_content(href) -> str | Tag:
     data = requests.get(href)
     data.encoding = 'utf-8'
     soup = BeautifulSoup(data.text, 'html.parser')
     xb_content = soup.select('div.genxin')
     if not xb_content:
         xb_content = soup.select('#xbcontent > p')
+    if not xb_content:
+        print("获取内容异常")
+        return ''
     # print(xbcontent[0])
     return xb_content[0]
 
