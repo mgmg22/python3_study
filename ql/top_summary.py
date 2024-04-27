@@ -11,7 +11,6 @@ import notify
 summary_list = []
 
 
-# 定义一个过滤函数，用于移除包含特定字符串的tr元素
 def filter_tr(tr):
     print("-----")
     # 序号、置顶

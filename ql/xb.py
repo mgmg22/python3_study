@@ -1,14 +1,13 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 import requests
 import notify
 
 xb_list = []
 
 
-# 定义一个过滤函数，用于移除包含特定字符串的tr元素
 def filter_list(tr):
     title = tr.get_text()
-    href = tr['href']
+    href = 'http://www.0818tuan.com' + tr['href']
     ignoreConditions = [
         "【顶】" in title,
     ]
@@ -23,22 +22,38 @@ def filter_list(tr):
                   "支付宝",
                   "微信",
                   "京东",
+                  "手淘",
+                  "淘宝",
                   "vx",
                   "xyk",
                   "还款",
                   "红包",
                   "猫超",
                   ]
-    # 使用all()函数和not in操作符判断my_string是否不包含substrings中的任意一个字符串
     if any(sub in title for sub in substrings):
         print(title)
+        print(href)
     else:
         return False
+    content = get_content(href)
     item = {
         'title': title,
-        'href': href
+        'href': href,
+        'content': content
     }
     xb_list.append(item)
+
+
+def get_content(href) -> Tag:
+    data = requests.get(href)
+    data.encoding = 'utf-8'
+    soup = BeautifulSoup(data.text, 'html.parser')
+    # document.querySelector("#xbcontent > div")
+    xb_content = soup.select('div.genxin')
+    if not xb_content:
+        xb_content = soup.select('#xbcontent > p')
+    # print(xbcontent[0])
+    return xb_content[0]
 
 
 def get_top_summary():
@@ -55,7 +70,8 @@ def notify_markdown():
     content = ''
     for item in xb_list:
         content += f'''
-[{item['title']}](http://www.0818tuan.com{item['href']})
+## [{item['title']}]({item['href']})
+{item['content']}
 '''
     notify.pushplus_bot_my(xb_list[0]["title"], content)
     with open("xb.md", 'w', encoding='utf-8') as f:
