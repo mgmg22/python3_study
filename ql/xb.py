@@ -10,14 +10,13 @@ def filter_list(tr):
     href = 'http://www.0818tuan.com' + tr['href']
     ignoreStrings = [
         "【顶】",
-        "定位",
+        "定位", "部分地区", "山东", "福建", "江苏", "云南", "江西", "河北", "广州",
         "首单", "盲盒",
-        "部分地区", "山东", "福建", "江苏", "云南", "江西", "河北", "广州",
-        "到手",
+        "到手", "洗衣液", "內衣",
         "买家",
-        "茅台", "洗衣液", "內衣",
+        "茅台",
         "联通", "流量", "单车",
-        "请问", "请教", "有啥", "怎么", "黄了", "咨询",
+        "请问", "请教", "有啥", "怎么", "黄了", "咨询", "居然要", "都多少",
     ]
 
     if any(sub in title for sub in ignoreStrings):
@@ -25,7 +24,7 @@ def filter_list(tr):
     substrings = [
         "招商银行", "招行", "掌上生活", "体验金",
         "工商银行", "工行", "工银", "e生活",
-        "建设银行", "建行", "建融",
+        "建设银行", "建行", "建融", "善融",
         "中国银行", "中行", "农业银行", "农行", "交通银行", "交行", "浦发", "邮储", "光大", "平安",
         "中信", "动卡空间",
         "微众",
@@ -58,7 +57,7 @@ def filter_list(tr):
     xb_list.append(item)
 
 
-def get_content(href) -> str | Tag:
+def get_content(href):
     data = requests.get(href)
     data.encoding = 'utf-8'
     soup = BeautifulSoup(data.text, 'html.parser')
