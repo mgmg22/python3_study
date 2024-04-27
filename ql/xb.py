@@ -55,7 +55,7 @@ def notify_markdown():
     content = ''
     for item in xb_list:
         content += f'''
-[{item['title']}](http://www.0818tuan.com/{item['href']})
+[{item['title']}](http://www.0818tuan.com{item['href']})
 '''
     notify.pushplus_bot_my(xb_list[0]["title"], content)
     with open("xb.md", 'w', encoding='utf-8') as f:

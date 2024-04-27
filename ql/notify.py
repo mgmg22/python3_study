@@ -78,6 +78,7 @@ push_config = {
 
     'PUSH_KEY_MY': '',  # server 酱的 PUSH_KEY，兼容旧版与 Turbo 版  我的
     'PUSH_PLUS_TOKEN_MY': '',  # push+ 微信推送的用户令牌  我的
+    'PUSH_PLUS_TOKEN_SECOND': '',  # push+ 微信推送的用户令牌  我的
 }
 notify_function = []
 # fmt: on
@@ -303,7 +304,6 @@ def pushplus_bot_my(title: str, content: str) -> None:
         print("PUSHPLUS_MY 服务的 PUSH_PLUS_TOKEN_MY 未设置!!\n取消推送")
         return
     print("PUSHPLUS_MY 服务启动")
-
     url = "http://www.pushplus.plus/send"
     data = {
         "token": push_config.get("PUSH_PLUS_TOKEN_MY"),
@@ -314,18 +314,31 @@ def pushplus_bot_my(title: str, content: str) -> None:
     body = json.dumps(data).encode(encoding="utf-8")
     headers = {"Content-Type": "application/json"}
     response = requests.post(url=url, data=body, headers=headers).json()
-
     if response["code"] == 200:
         print("PUSHPLUS_MY 推送成功！")
+        pushplus_bot_second(title,content)
     else:
-        url_old = "http://pushplus.hxtrip.com/send"
-        headers["Accept"] = "application/json"
-        response = requests.post(url=url_old, data=body, headers=headers).json()
+        print("PUSHPLUS_MY 推送失败！")
 
-        if response["code"] == 200:
-            print("PUSHPLUS_MY(hxtrip) 推送成功！")
-        else:
-            print("PUSHPLUS_MY 推送失败！")
+def pushplus_bot_second(title: str, content: str) -> None:
+    if not push_config.get("PUSH_PLUS_TOKEN_SECOND"):
+        print("PUSHPLUS_MY 服务的 PUSH_PLUS_TOKEN_SECOND 未设置!!\n取消推送")
+        return
+    print("PUSHPLUS_SECOND 服务启动")
+    url = "http://www.pushplus.plus/send"
+    data = {
+        "token": push_config.get("PUSH_PLUS_TOKEN_SECOND"),
+        "title": title,
+        "content": content,
+        "template": "markdown"
+    }
+    body = json.dumps(data).encode(encoding="utf-8")
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(url=url, data=body, headers=headers).json()
+    if response["code"] == 200:
+        print("PUSHPLUS_SECOND 推送成功！")
+    else:
+        print("PUSHPLUS_SECOND 推送失败！")
 
 
 def qmsg_bot(title: str, content: str) -> None:
@@ -538,8 +551,6 @@ if push_config.get("PUSH_KEY"):
     notify_function.append(serverJ)
 if push_config.get("PUSH_PLUS_TOKEN"):
     notify_function.append(pushplus_bot)
-if push_config.get("PUSH_PLUS_TOKEN_MY"):
-    notify_function.append(pushplus_bot_my)
 if push_config.get("QMSG_KEY") and push_config.get("QMSG_TYPE"):
     notify_function.append(qmsg_bot)
 if push_config.get("QYWX_AM"):
