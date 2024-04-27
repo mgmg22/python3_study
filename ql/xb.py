@@ -35,11 +35,10 @@ def filter_list(tr):
         print(href)
     else:
         return False
-    content = get_content(href)
     item = {
         'title': title,
         'href': href,
-        'content': content
+        'content': get_content(href)
     }
     xb_list.append(item)
 
@@ -48,7 +47,6 @@ def get_content(href) -> Tag:
     data = requests.get(href)
     data.encoding = 'utf-8'
     soup = BeautifulSoup(data.text, 'html.parser')
-    # document.querySelector("#xbcontent > div")
     xb_content = soup.select('div.genxin')
     if not xb_content:
         xb_content = soup.select('#xbcontent > p')
