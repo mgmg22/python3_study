@@ -68,7 +68,7 @@ def notify_markdown():
     content = ''
     for item in xb_list:
         content += f'''
-## [{item['title']}]({item['href']})
+##### [{item['title']}]({item['href']})
 {item['content']}
 '''
     notify.pushplus_bot_my(xb_list[0]["title"], content)
