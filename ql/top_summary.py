@@ -25,21 +25,15 @@ def filter_tr(tr):
     state = td_text3[0].get_text()
     # print(str(td_text2[0]))
     # 排除项
-    conditions = [
-        "<span>剧集" in str(td_text2[0]),
-        "<span>综艺" in str(td_text2[0]),
-        "<span>演出" in str(td_text2[0]),
-        "<span>电影" in str(td_text2[0]),
-        "<span>音乐" in str(td_text2[0]),
-        "<span>盛典" in str(td_text2[0]),
-        "ad_id=" in str(td_text2[0]),
-        # todo emoji
-        # "[舔屏]" in str(td_text2[0])
+    blackList = [
+        "<span>剧集", "<span>综艺", "<span>演出", "<span>电影", "<span>音乐", "<span>盛典",
+        "ad_id=",
+        ".png",
     ]
+    if any(sub in str(td_text2[0]) for sub in blackList):
+        return False
     # 过滤置顶
     if "icon-top" in str(td_text1[0]):
-        return False
-    if any(conditions):
         return False
     item = {
         'title': num + "." + text,
