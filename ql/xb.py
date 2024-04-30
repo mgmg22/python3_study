@@ -29,7 +29,7 @@ def filter_list(tr):
         "啥", "呢", "居然要", "都多少", "是多少", "是不是", "便宜啊",
         "吧？", "了？", "链接？", "么？", "呀!", "啊？", "啦 ！", "了啊",
         # ----负面----
-        "黄了", "没了", "果熟", "有果", "油果", "18cm", "续费", "拦截", "删了", "不玩了", "黑号", "限制使用",
+        "黄了", "没了", "果熟", "有果", "油果", "18cm", "续费", "拦截", "删了", "不玩了", "黑号", "号黑", "限制使用",
         "被盗", "崩溃", "差评", "长期出", "监控", "套牢", "猫饼", "怀疑", "未到账", "过期",
         # ----虚拟----
         "风险", "美元", "提额", "保险", "开通", "境外",
@@ -89,16 +89,14 @@ def filter_list(tr):
         "礼品卡", "星礼卡", "苹果卡",
         "深圳通", "网上国网",
     ]
-    if any(sub in title for sub in whiteList):
-        print(title)
-        print(href)
-    else:
+    if not any(sub in title for sub in whiteList):
         return False
     content = get_content(href)
-    for content_sub in areaBlackList:
-        if content_sub in content.get_text():
-            print(content_sub + "关键字不合法，已忽略")
+    for area in areaBlackList:
+        if area in content.get_text():
+            print(area + "----关键字不合法，已忽略" + '\t\t' + href)
             return False
+    print(title + '\t\t' + href)
     item = {
         'title': title,
         'href': href,
