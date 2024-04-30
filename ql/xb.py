@@ -8,11 +8,13 @@ xb_list = []
 def filter_list(tr):
     title = tr.get_text()
     href = 'http://www.0818tuan.com' + tr['href']
-    highBlackList = [
-        "【顶】",
+    areaBlackList = [
         "定位", "部分", "山东", "福建", "江苏", "云南", "江西", "河北", "广东", "重庆", "吉林", "湖北",
         "陕西", "湖南", "安徽", "四川",
-        "厦门", "东北", "南京", "东莞", "广州", "辽宁", "南海", "苏州", "中山",
+        "厦门", "东北", "南京", "东莞", "广州", "辽宁", "南海", "苏州", "中山", "常州", "青岛",
+    ]
+    highBlackList = [
+        "【顶】",
         # ----玩法----
         "需要邀请", "特邀", "受邀", "助力",
         "首单", "盲盒", "月黑风高", "和包生日", "生日礼", "互换", "入会", "生日分享",
@@ -24,7 +26,7 @@ def filter_list(tr):
         # "凑",
         # ----语气----
         "问题", "求", "啥", "咋", "呢", "请问", "问一下", "请教", "怎么", "怎样", "咨询", "居然要", "都多少", "是多少",
-        "是不是快", "便宜啊", "怀疑",
+        "是不是快", "便宜啊", "怀疑", "问下",
         "吧？", "了？", "链接？", "么？", "呀!", "啊？", "啦 ！", "了啊",
         # ----负面----
         "黄了", "没了", "果熟", "有果", "油果", "18cm", "续费", "拦截", "删了", "不玩了", "黑号", "限制使用",
@@ -51,12 +53,14 @@ def filter_list(tr):
         "华为", "HUAWEI", "MiPay", "yzf",
         "火车", "电影", "门票", "打车", "单车", "流量", "出行优惠券", "网盘", "地铁",
         # ----卡----
-        "平安x", "中行x", "邮储x", "农行x", "交行x", "光大x", "阳光惠生活", "平安银行X",
+        "平安x", "中行x", "邮储x", "农行x", "交行x", "光大x", "阳光惠生活", "平安银行X", "平安银行信",
         "邮储联名", "邮储美团联名", "闪光卡", "广发", "恒丰",
         # ----无效----
         "京东plus", "Plus拍下", "联通", "移动套餐", "美团圈圈", "王卡", "钻石会员",
         "元梦之星",
     ]
+    if any(sub in title for sub in areaBlackList):
+        return False
     if any(sub in title for sub in highBlackList):
         return False
     if any(sub in title for sub in lowBlackList):
@@ -90,12 +94,16 @@ def filter_list(tr):
         print(href)
     else:
         return False
+    content = get_content(href)
+    for content_sub in areaBlackList:
+        if content_sub in content.get_text():
+            print(content_sub + "关键字不合法，已忽略")
+            return False
     item = {
         'title': title,
         'href': href,
-        'content': get_content(href)
+        'content': content
     }
-    # todo content条件过滤
     xb_list.append(item)
 
 
