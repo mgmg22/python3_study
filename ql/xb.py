@@ -44,7 +44,7 @@ def filter_list(tr):
         "迅雷", "唯品会小程序", "爱奇艺红包", "电子书", "贷",
         # ----不符合预期的词语----
         "漏水", "洗发水", "纯水", "碱水", "水果", "水雾", "酒水", "吸水", "精萃水", "净水", "补水", "花露水", "热水",
-        "玻璃水", "cm", "ml", "ML", "口水", "椰子水", "缩水", "水龙", "水润", "水牛","水枪",
+        "玻璃水", "cm", "ml", "ML", "口水", "椰子水", "缩水", "水龙", "水润", "水牛", "水枪",
     ]
     lowBlackList = [
         "多拍", "返红包", "券包", "免单", "预售", "试用", "点秒杀", "前10", "以旧换新", "防身",
@@ -121,7 +121,7 @@ def get_content(href):
     if not xb_content:
         xb_content = soup.select('#xbcontent > p')
     if not xb_content:
-        print("获取帖子内容异常")
+        print("获取不到帖子内容")
         return ''
     return xb_content[0]
 
@@ -137,15 +137,18 @@ def get_top_summary():
 
 
 def notify_markdown():
-    content = ''
-    for item in xb_list:
-        content += f'''
-##### [{item['title']}]({item['href']})
-{item['content']}
-'''
-    notify.pushplus_bot_my(xb_list[0]["title"], content)
-    with open("xb.md", 'w', encoding='utf-8') as f:
-        f.write(content)
+    if xb_list:
+        content = ''
+        for item in xb_list:
+            content += f'''
+    ##### [{item['title']}]({item['href']})
+    {item['content']}
+    '''
+        notify.pushplus_bot_my(xb_list[0]["title"], content)
+        with open("xb.md", 'w', encoding='utf-8') as f:
+            f.write(content)
+    else:
+        print("暂无线报！！")
 
 
 if __name__ == '__main__':
