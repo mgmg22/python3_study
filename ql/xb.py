@@ -16,6 +16,7 @@ def filter_list(tr):
         # ----卡----
         "平安X", "平安x", "中行x", "邮储x", "农行x", "交行x", "光大x", "阳光惠生活", "平安银行X", "平安银行信",
         "邮储联名", "邮储美团联名", "闪光卡", "广发", "恒丰", "浦大喜奔", "缤纷生活", "万事达", "汇丰", "农商",
+        "宝石山", "众邦",
     ]
     highBlackList = [
         "【顶】",
@@ -63,7 +64,7 @@ def filter_list(tr):
         "火车", "电影", "门票", "打车", "单车", "流量", "出行优惠券", "网盘", "地铁", "网易云", "机票", "顺丰", "快递",
         # ----无效----
         "京东plus", "PLUS会员", "Plus拍下", "plus领", "联通", "移动套餐", "美团圈圈", "王卡", "钻石会员",
-        "元梦之星", "老乡鸡", "沪上阿姨", "永和大王",
+        "元梦之星", "老乡鸡", "沪上阿姨", "永和大王", "沃尔玛",
     ]
     if any(sub in title for sub in commonBlackList):
         return False
@@ -141,9 +142,9 @@ def notify_markdown():
         content = ''
         for item in xb_list:
             content += f'''
-    ##### [{item['title']}]({item['href']})
-    {item['content']}
-    '''
+##### [{item['title']}]({item['href']})
+{item['content']}
+'''
         notify.pushplus_bot_my(xb_list[0]["title"], content)
         with open("xb.md", 'w', encoding='utf-8') as f:
             f.write(content)
