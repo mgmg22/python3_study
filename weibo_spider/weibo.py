@@ -16,9 +16,11 @@ import requests
 from wordcloud import WordCloud
 
 # 只需替换containerid
+# containerid="107603"+uid
 # api = 'https://m.weibo.cn/api/container/getIndex?pids[]=Pl_Official_MyProfileFeed__20&pids[]=Pl_Official_MyProfileFeed__20&profile_ftype[]=1&profile_ftype[]=1&is_all[]=1&is_all[]=1&jumpfrom=weibocom&sudaref=login.sina.com.cn&type=uid&value=2843500544&containerid=1076032843500544&page=%s'
 # api = 'https://m.weibo.cn/api/container/getIndex?type=uid&value=1585747413&containerid=1076031585747413&page=%s'
-api = 'https://m.weibo.cn/api/container/getIndex?containerid=1076035088151536&page=%s'
+# api = 'https://m.weibo.cn/api/container/getIndex?containerid=1076035088151536&page=%s'
+api = 'https://m.weibo.cn/api/container/getIndex?containerid=1076031187051904&page=%s'
 # api = 'https://m.weibo.cn/api/container/getIndex?containerid=1076035564333165&page=%s'
 
 csv_path = 'weibo.csv'
